@@ -324,7 +324,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a th:href="@{/alumnos}" class="nav-link">
+                    <a th:href="@{/alumnos/nuevo}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Nuevo Alumno</p>
                     </a>
@@ -337,12 +337,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
                   </li>
                 </ul>
               </li>
-              <li class="nav-item">
-                <a href="../generate/theme.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Theme Generate</p>
-                </a>
-              </li>
+        
               
               <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -420,15 +415,15 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
-                    UI Elements
+                    Asistencias
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="../UI/general.html" class="nav-link">
+                    <a th:href="@{/asistencias/nuevo}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>General</p>
+                      <p>Registrar Asistencia</p>
                     </a>
                   </li>
                   <li class="nav-item">
