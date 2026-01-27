@@ -1,0 +1,120 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
+<head>
+    <title>Nuevo Ascenso</title>
+</head>
+<body>
+    <div layout:fragment="contenidopaginas">
+        <div class="card card-info card-outline mb-4">
+            <!--begin::Header-->
+            <div class="card-header">
+                <div class="card-title">NUEVO ASCENSO</div>
+            </div>
+            <!--end::Header-->
+
+            <!--begin::Form-->
+            <form class="needs-validation" novalidate>
+                <!--begin::Body-->
+                <div class="card-body">
+                    <!--begin::Row-->
+                    <div class="row g-3">
+
+                        <!-- ID ALUMNO -->
+                        <div class="col-md-12">
+                            <label for="aluId" class="form-label">ID Alumno *</label>
+                            <input type="number" class="form-control" id="aluId" min="1" required />
+                            <div class="invalid-feedback">Ingrese un ID de alumno válido.</div>
+                        </div>
+
+                        <!-- CINTURON -->
+                        <div class="col-md-12">
+                            <label for="ascCinturon" class="form-label">Cinturón a obtener *</label>
+                            <input type="text" class="form-control" id="ascCinturon"
+                                   placeholder="Ej: Amarillo, Naranja, Verde..." maxlength="50" required />
+                            <div class="invalid-feedback">Ingrese el cinturón.</div>
+                        </div>
+
+                        <!-- FECHA EXAMEN -->
+                        <div class="col-md-6">
+                            <label for="ascFechaExamen" class="form-label">Fecha de Examen *</label>
+                            <input type="date" class="form-control" id="ascFechaExamen" required />
+                            <div class="invalid-feedback">Seleccione una fecha válida.</div>
+                        </div>
+
+                        <!-- FECHA ASCENSO -->
+                        <div class="col-md-6">
+                            <label for="ascFechaAscenso" class="form-label">Fecha de Ascenso *</label>
+                            <input type="date" class="form-control" id="ascFechaAscenso" required />
+                            <div class="invalid-feedback">Seleccione una fecha válida.</div>
+                        </div>
+
+                        <!-- CALIFICACION -->
+                        <div class="col-md-6">
+                            <label for="ascCalificacion" class="form-label">Calificación *</label>
+                            <input type="number" class="form-control" id="ascCalificacion"
+                                   step="0.01" min="0" max="10" placeholder="Ej: 9.50" required />
+                            <div class="invalid-feedback">Ingrese una calificación válida (0 a 10).</div>
+                        </div>
+
+                        <!-- EVALUADOR -->
+                        <div class="col-md-6">
+                            <label for="ascEvaluador" class="form-label">Evaluador *</label>
+                            <input type="text" class="form-control" id="ascEvaluador"
+                                   placeholder="Ej: Sensei Carlos" maxlength="100" required />
+                            <div class="invalid-feedback">Ingrese el nombre del evaluador.</div>
+                        </div>
+
+                        <!-- OBSERVACION -->
+                        <div class="col-md-12">
+                            <label for="ascObservacion" class="form-label">Observación</label>
+                            <textarea class="form-control" id="ascObservacion" rows="3"
+                                      placeholder="Observaciones del examen / ascenso..."></textarea>
+                        </div>
+
+                        <!-- CERTIFICADO GENERADO -->
+                        <div class="col-md-12">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="ascCertGenerado" />
+                                <label class="form-check-label" for="ascCertGenerado">
+                                    Certificado generado
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Body-->
+
+                <!--begin::Footer-->
+                <div class="card-footer">
+                    <button class="btn btn-info" type="submit">Guardar Ascenso</button>
+                    <a th:href="@{/ascensos/listarascensos}" class="btn btn-secondary ms-2">Cancelar</a>
+                </div>
+                <!--end::Footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+    </div>
+
+    <!--begin::JavaScript-->
+    <script>
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+    <!--end::JavaScript-->
+</body>
+</html>

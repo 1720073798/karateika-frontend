@@ -1,0 +1,74 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
+<head>
+    <title>Listar Ascensos</title>
+</head>
+<body>
+    <div layout:fragment="contenidopaginas">
+        <h1>Lista de Ascensos</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <a th:href="@{/ascensos/nuevoascenso}" class="btn btn-primary mb-3">Nuevo Ascenso</a>
+
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">ID Ascenso</th>
+                            <th scope="col">ID Alumno</th>
+                            <th scope="col">Cinturón</th>
+                            <th scope="col">Fecha Examen</th>
+                            <th scope="col">Fecha Ascenso</th>
+                            <th scope="col">Calificación</th>
+                            <th scope="col">Evaluador</th>
+                            <th scope="col">Observación</th>
+                            <th scope="col">Cert. Generado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <!-- Ejemplo estático (más adelante se llena con datos del backend) -->
+                        <tr>
+                            <td>1</td>
+                            <td>10</td>
+                            <td>Amarillo</td>
+                            <td>2026-01-10</td>
+                            <td>2026-01-15</td>
+                            <td>9.50</td>
+                            <td>Sensei Carlos</td>
+                            <td>Aprobado con buen desempeño</td>
+                            <td>SI</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-info">Ver</a>
+                                <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>12</td>
+                            <td>Naranja</td>
+                            <td>2026-01-18</td>
+                            <td>2026-01-20</td>
+                            <td>8.80</td>
+                            <td>Sensei Mario</td>
+                            <td>Reforzar técnicas de defensa</td>
+                            <td>NO</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-info">Ver</a>
+                                <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
