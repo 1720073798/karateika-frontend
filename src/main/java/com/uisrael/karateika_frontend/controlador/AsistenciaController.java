@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/alumnos")
-public class AlumnoControllador {
-	
+@RequestMapping("/asistencias")
+public class AsistenciaController {
 	@GetMapping
 	public String listarAlumnos() {
-		return "/alumno/alumnos"; //Ubicacion fisica templates
+		return "/asistencia/buscarAsistenciaAlumno"; //Ubicacion fisica templates
 	}
 	
 	@GetMapping("/nuevo")
 	public String nuevoAlumnos() {
-		return "/alumno/nuevoAlumno"; //Ubicacion fisica templates
+		return "/asistencia/registrarAsistencias"; //Ubicacion fisica templates
 	}
+
 }
