@@ -324,7 +324,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a th:href="@{/alumnos/nuevo}" class="nav-link">
+                    <a th:href="@{/alumnos}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Nuevo Alumno</p>
                     </a>
@@ -337,7 +337,12 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
                   </li>
                 </ul>
               </li>
-        
+              <li class="nav-item">
+                <a href="../generate/theme.html" class="nav-link">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Theme Generate</p>
+                </a>
+              </li>
               
               <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -411,56 +416,19 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
                   </li>
                 </ul>
               </li>
-              
-              <li class="nav-item"><a href="#" class="nav-link"> <i
-								class="nav-icon bi bi-file-earmark-text"></i>
-								<p>
-									Comprobantes <i class="nav-arrow bi bi-chevron-right"></i>
-								</p>
-						</a>
-							<ul class="nav nav-treeview">
-								<li class="nav-item"><a th:href="@{/comprobantes/nuevocomprobante}"
-									class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-										<p>Nuevo Comprobante</p>
-								</a></li>
-								<li class="nav-item"><a th:href="@{/comprobantes/listarcomprobante}"
-									class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-										<p>Lista de Comprobantes</p>
-								</a></li>
-							</ul></li>
-
-						<li class="nav-item"><a href="#" class="nav-link"> <i
-								class="nav-icon bi bi-cash-coin"></i>
-								<p>
-									Pagos <i class="nav-arrow bi bi-chevron-right"></i>
-								</p>
-						</a>
-							<ul class="nav nav-treeview">
-								<li class="nav-item"><a th:href="@{/pagos/nuevopago}"
-									class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-										<p>Nuevo Pago</p>
-								</a></li>
-								<li class="nav-item"><a th:href="@{/pagos/listarpago}"
-									class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-										<p>Lista de Pagos</p>
-								</a></li>
-							</ul>
-							</li>
-              
-              
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-tree-fill"></i>
                   <p>
-                    Asistencias
+                    UI Elements
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a th:href="@{/asistencias/nuevo}" class="nav-link">
+                    <a href="../UI/general.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Registrar Asistencia</p>
+                      <p>General</p>
                     </a>
                   </li>
                   <li class="nav-item">

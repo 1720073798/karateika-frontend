@@ -1,0 +1,137 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
+<head>
+    <title>Nuevo Pago</title>
+</head>
+<body>
+    <div layout:fragment="contenidopaginas">
+        <div class="card card-success card-outline mb-4">
+            <!--begin::Header-->
+            <div class="card-header">
+                <div class="card-title">REGISTRAR NUEVO PAGO</div>
+            </div>
+            <!--end::Header-->
+            <!--begin::Form-->
+            <form class="needs-validation" novalidate>
+                <!--begin::Body-->
+                <div class="card-body">
+                    <!--begin::Row-->
+                    <div class="row g-3">
+                        <!--begin::Col (Alumno)-->
+                        <div class="col-md-6">
+                            <label for="aluId" class="form-label">Alumno *</label>
+                            <select class="form-select" id="aluId" required>
+                                <option selected disabled value="">Seleccione un alumno...</option>
+                                <option value="1">Carlos Pérez</option>
+                                <option value="2">María Gómez</option>
+                                <option value="3">Juan Rodríguez</option>
+                            </select>
+                            <div class="invalid-feedback">Seleccione un alumno.</div>
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col (Comprobante)-->
+                        <div class="col-md-6">
+                            <label for="comId" class="form-label">Comprobante *</label>
+                            <select class="form-select" id="comId" required>
+                                <option selected disabled value="">Seleccione un comprobante...</option>
+                                <option value="1">Recibo Inscripción - Ene 2026</option>
+                                <option value="2">Mensualidad - Feb 2026</option>
+                            </select>
+                            <div class="invalid-feedback">Seleccione un comprobante.</div>
+                        </div>
+                        <!--end::Col-->
+
+                        <!--begin::Col-->
+                        <div class="col-md-4">
+                            <label for="pagMes" class="form-label">Mes *</label>
+                            <input type="number" class="form-control" id="pagMes" min="1" max="12" required />
+                            <div class="invalid-feedback">Ingrese mes válido (1-12).</div>
+                        </div>
+                        <!--end::Col-->
+                        <div class="col-md-4">
+                            <label for="pagAnio" class="form-label">Año *</label>
+                            <input type="number" class="form-control" id="pagAnio" min="2000" max="2100" required />
+                            <div class="invalid-feedback">Ingrese año válido.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pagFechaPago" class="form-label">Fecha de Pago</label>
+                            <input type="date" class="form-control" id="pagFechaPago" />
+                        </div>
+
+                        <!--begin::Col-->
+                        <div class="col-md-6">
+                            <label for="pagMetodoPago" class="form-label">Método de Pago *</label>
+                            <select class="form-select" id="pagMetodoPago" required>
+                                <option selected disabled value="">Elija...</option>
+                                <option>Efectivo</option>
+                                <option>Transferencia Bancaria</option>
+                                <option>Tarjeta de Crédito</option>
+                                <option>Tarjeta de Débito</option>
+                                <option>Otro</option>
+                            </select>
+                            <div class="invalid-feedback">Seleccione un método.</div>
+                        </div>
+                        <!--end::Col-->
+                        <div class="col-md-6">
+                            <label for="pagNumeroRecibo" class="form-label">Número de Recibo</label>
+                            <input type="text" class="form-control" id="pagNumeroRecibo" maxlength="20" />
+                        </div>
+
+                        <!--begin::Col-->
+                        <div class="col-md-6">
+                            <label for="pagMonto" class="form-label">Monto *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" class="form-control" id="pagMonto" required />
+                            </div>
+                            <div class="invalid-feedback">Ingrese un monto válido.</div>
+                        </div>
+                        <!--end::Col-->
+                        <div class="col-md-6">
+                            <label for="pagRegistradoPor" class="form-label">Registrado por *</label>
+                            <input type="text" class="form-control" id="pagRegistradoPor" value="Admin" required />
+                            <div class="invalid-feedback">Ingrese quien registró.</div>
+                        </div>
+
+                        <!--begin::Col (Observación)-->
+                        <div class="col-12">
+                            <label for="pagObservacion" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="pagObservacion" rows="3" placeholder="Ej: Pago adelantado, descuento aplicado..."></textarea>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Body-->
+                <!--begin::Footer-->
+                <div class="card-footer">
+                    <button class="btn btn-success" type="submit">Registrar Pago</button>
+                    <a th:href="@{/pagos}" class="btn btn-secondary ms-2">Cancelar</a>
+                </div>
+                <!--end::Footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+    </div>
+
+    <!--begin::JavaScript-->
+    <script>
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+    <!--end::JavaScript-->
+</body>
+</html>

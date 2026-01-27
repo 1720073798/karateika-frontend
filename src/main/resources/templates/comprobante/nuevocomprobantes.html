@@ -1,0 +1,77 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
+<head>
+    <title>Nuevo Comprobante</title>
+</head>
+<body>
+    <div layout:fragment="contenidopaginas">
+        <div class="card card-info card-outline mb-4">
+            <!--begin::Header-->
+            <div class="card-header">
+                <div class="card-title">NUEVO COMPROBANTE</div>
+            </div>
+            <!--end::Header-->
+            <!--begin::Form-->
+            <form class="needs-validation" novalidate>
+                <!--begin::Body-->
+                <div class="card-body">
+                    <!--begin::Row-->
+                    <div class="row g-3">
+                        <!--begin::Col-->
+                        <div class="col-md-12">
+                            <label for="comNombre" class="form-label">Nombre del Comprobante *</label>
+                            <input type="text" class="form-control" id="comNombre" required />
+                            <div class="invalid-feedback">Ingrese un nombre válido.</div>
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col-->
+                        <div class="col-md-12">
+                            <label for="comRutaArchivo" class="form-label">Ruta del Archivo *</label>
+                            <input type="text" class="form-control" id="comRutaArchivo"
+                                   placeholder="/uploads/recibo_2026_01.pdf" required />
+                            <div class="invalid-feedback">Ingrese la ruta del archivo.</div>
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col-->
+                        <div class="col-md-12">
+                            <label for="comFechaSubida" class="form-label">Fecha de Subida *</label>
+                            <input type="date" class="form-control" id="comFechaSubida" required />
+                            <div class="invalid-feedback">Seleccione una fecha válida.</div>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Body-->
+                <!--begin::Footer-->
+                <div class="card-footer">
+                    <button class="btn btn-info" type="submit">Guardar Comprobante</button>
+                    <a th:href="@{/comprobantes}" class="btn btn-secondary ms-2">Cancelar</a>
+                </div>
+                <!--end::Footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+    </div>
+
+    <!--begin::JavaScript-->
+    <script>
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+    <!--end::JavaScript-->
+</body>
+</html>
