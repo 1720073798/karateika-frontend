@@ -1,90 +1,119 @@
-
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" 
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="/plantilla/plantillaui.html">
-  <head>
-   
-    <title>Listar Alumnos</title>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
 
-  </head>
-  <!--end::Head-->
-  <!--begin::Body-->
-  <body>
-  	<div layout:fragment="contenidopaginas">
-  		<div class="card mb-4">
-                  <div class="card-header">
-                    <h3 class="card-title">REGISTRAR ASISTENCIAS</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body p-0">
-                    <table class="table table-striped">
-                      <thead>
+<head>
+    <title>Registro de Asistencias</title>
+</head>
+
+<body>
+
+<div layout:fragment="contenidopaginas">
+
+    <div class="card mb-4">
+
+        <div class="card-header">
+            <h3 class="card-title">REGISTRO DE ASISTENCIAS</h3>
+        </div>
+
+        <div class="card-body">
+
+            <!-- CONTENEDOR CON SCROLL -->
+            <div class="table-responsive" style="max-height: 400px; overflow:auto;">
+
+                <table class="table table-bordered table-striped table-hover align-middle">
+
+                    <thead class="table-dark sticky-top">
                         <tr>
-                          <th style="width: 10px">#</th>
-                          <th>Task</th>
-                          <th>Progress</th>
-                          <th style="width: 40px">Label</th>
+                            <th style="width:50px;">#</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th class="text-center">Asiste</th>
+                            <th class="text-center">No asiste</th>
+                            <th>Observación</th>
                         </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="align-middle">
-                          <td>1.</td>
-                          <td>Update software</td>
-                          <td>
-                            <div class="progress progress-xs">
-                              <div
-                                class="progress-bar progress-bar-danger"
-                                style="width: 55%"
-                              ></div>
-                            </div>
-                          </td>
-                          <td><span class="badge text-bg-danger">55%</span></td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td>2.</td>
-                          <td>Clean database</td>
-                          <td>
-                            <div class="progress progress-xs">
-                              <div class="progress-bar text-bg-warning" style="width: 70%"></div>
-                            </div>
-                          </td>
-                          <td>
-                            <span class="badge text-bg-warning">70%</span>
-                          </td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td>3.</td>
-                          <td>Cron job running</td>
-                          <td>
-                            <div class="progress progress-xs progress-striped active">
-                              <div class="progress-bar text-bg-primary" style="width: 30%"></div>
-                            </div>
-                          </td>
-                          <td>
-                            <span class="badge text-bg-primary">30%</span>
-                          </td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td>4.</td>
-                          <td>Fix and squish bugs</td>
-                          <td>
-                            <div class="progress progress-xs progress-striped active">
-                              <div class="progress-bar text-bg-success" style="width: 90%"></div>
-                            </div>
-                          </td>
-                          <td>
-                            <span class="badge text-bg-success">90%</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-  	</div>
+                    </thead>
 
-  </body>
-  <!--end::Body-->
+                    <tbody>
+
+                        <!-- FILA 1 -->
+                        <tr>
+                            <td>1</td>
+                            <td>Juan</td>
+                            <td>Pérez</td>
+
+                            <!-- RADIO ASISTE -->
+                            <td class="text-center">
+                                <input type="radio" name="estado1" class="form-check-input">
+                            </td>
+
+                            <!-- RADIO NO ASISTE -->
+                            <td class="text-center">
+                                <input type="radio" name="estado1" class="form-check-input">
+                            </td>
+
+                            <!-- OBSERVACIÓN -->
+                            <td>
+                                <input type="text" class="form-control" placeholder="Observación">
+                            </td>
+                        </tr>
+
+                        <!-- FILA 2 -->
+                        <tr>
+                            <td>2</td>
+                            <td>Ana</td>
+                            <td>Gómez</td>
+
+                            <td class="text-center">
+                                <input type="radio" name="estado2" class="form-check-input">
+                            </td>
+
+                            <td class="text-center">
+                                <input type="radio" name="estado2" class="form-check-input">
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control" placeholder="Observación">
+                            </td>
+                        </tr>
+
+                        <!-- FILA 3 -->
+                        <tr>
+                            <td>3</td>
+                            <td>Carlos</td>
+                            <td>Ruiz</td>
+
+                            <td class="text-center">
+                                <input type="radio" name="estado3" class="form-check-input">
+                            </td>
+
+                            <td class="text-center">
+                                <input type="radio" name="estado3" class="form-check-input">
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control" placeholder="Observación">
+                            </td>
+                        </tr>
+
+                        <!-- AGREGA MÁS FILAS SI QUIERES -->
+                    </tbody>
+
+                </table>
+            </div>
+
+            <!-- BOTÓN VISUAL -->
+            <div class="mt-3 text-end">
+                <button class="btn btn-primary">
+                    Guardar Asistencia
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
 </html>

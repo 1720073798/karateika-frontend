@@ -1,90 +1,123 @@
-
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" 
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="/plantilla/plantillaui.html">
-  <head>
-   
-    <title>Listar Alumnos</title>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
 
-  </head>
-  <!--end::Head-->
-  <!--begin::Body-->
-  <body>
-  	<div layout:fragment="contenidopaginas">
-  		<div class="card mb-4">
-                  <div class="card-header">
-                    <h3 class="card-title">BUSCAR ASISTENCIA DE ALUMNOS</h3>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body p-0">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th style="width: 10px">#</th>
-                          <th>Task</th>
-                          <th>Progress</th>
-                          <th style="width: 40px">Label</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="align-middle">
-                          <td>1.</td>
-                          <td>Update software</td>
-                          <td>
-                            <div class="progress progress-xs">
-                              <div
-                                class="progress-bar progress-bar-danger"
-                                style="width: 55%"
-                              ></div>
-                            </div>
-                          </td>
-                          <td><span class="badge text-bg-danger">55%</span></td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td>2.</td>
-                          <td>Clean database</td>
-                          <td>
-                            <div class="progress progress-xs">
-                              <div class="progress-bar text-bg-warning" style="width: 70%"></div>
-                            </div>
-                          </td>
-                          <td>
-                            <span class="badge text-bg-warning">70%</span>
-                          </td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td>3.</td>
-                          <td>Cron job running</td>
-                          <td>
-                            <div class="progress progress-xs progress-striped active">
-                              <div class="progress-bar text-bg-primary" style="width: 30%"></div>
-                            </div>
-                          </td>
-                          <td>
-                            <span class="badge text-bg-primary">30%</span>
-                          </td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td>4.</td>
-                          <td>Fix and squish bugs</td>
-                          <td>
-                            <div class="progress progress-xs progress-striped active">
-                              <div class="progress-bar text-bg-success" style="width: 90%"></div>
-                            </div>
-                          </td>
-                          <td>
-                            <span class="badge text-bg-success">90%</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <!-- /.card-body -->
+<head>
+    <title>Consulta de Asistencias</title>
+</head>
+
+<body>
+
+<div layout:fragment="contenidopaginas">
+
+    <div class="card mb-4">
+
+        <div class="card-header">
+            <h3 class="card-title">CONSULTA DE ASISTENCIAS POR CÉDULA</h3>
+        </div>
+
+        <div class="card-body">
+
+            <!-- BUSCADOR + RESUMEN -->
+            <div class="row mb-4 align-items-end">
+
+                <!-- BUSCAR CÉDULA -->
+                <div class="col-md-4">
+                    <label class="form-label">Buscar por cédula</label>
+                    <input type="text" class="form-control" placeholder="Ingrese la cédula">
                 </div>
-                <!-- /.card -->
-  	</div>
 
-  </body>
-  <!--end::Body-->
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100">
+                        Buscar
+                    </button>
+                </div>
+
+                <!-- RESUMEN -->
+                <div class="col-md-2 text-center">
+                    <label class="form-label">Días Asistencia</label>
+                    <div class="fw-bold text-success fs-5">12</div>
+                </div>
+
+                <div class="col-md-2 text-center">
+                    <label class="form-label">Días No Asistencia</label>
+                    <div class="fw-bold text-danger fs-5">3</div>
+                </div>
+
+                <div class="col-md-2 text-center">
+                    <label class="form-label">Total</label>
+                    <div class="fw-bold fs-5">15</div>
+                </div>
+
+            </div>
+
+            <!-- TABLA -->
+            <div class="table-responsive" style="max-height: 400px; overflow:auto;">
+
+                <table class="table table-bordered table-striped table-hover align-middle">
+
+                    <thead class="table-dark sticky-top">
+                        <tr>
+                            <th style="width:50px;">#</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Fecha</th>
+                            <th>Observación</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <!-- REGISTRO 1 -->
+                        <tr>
+                            <td>1</td>
+                            <td>Juan</td>
+                            <td>Pérez</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">Asiste</span>
+                            </td>
+                            <td class="text-center">2026-01-10</td>
+                            <td>Asistió puntual</td>
+                        </tr>
+
+                        <!-- REGISTRO 2 -->
+                        <tr>
+                            <td>2</td>
+                            <td>Juan</td>
+                            <td>Pérez</td>
+                            <td class="text-center">
+                                <span class="badge bg-danger">No asiste</span>
+                            </td>
+                            <td class="text-center">2026-01-12</td>
+                            <td>Falta sin aviso</td>
+                        </tr>
+
+                        <!-- REGISTRO 3 -->
+                        <tr>
+                            <td>3</td>
+                            <td>Juan</td>
+                            <td>Pérez</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">Asiste</span>
+                            </td>
+                            <td class="text-center">2026-01-14</td>
+                            <td>-</td>
+                        </tr>
+
+                        <!-- AGREGA MÁS REGISTROS SI QUIERES -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
 </html>

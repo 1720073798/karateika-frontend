@@ -1,162 +1,163 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" 
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="/plantilla/plantillaui.html">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
   <head>
-   
     <title>Nuevo Alumno</title>
-
   </head>
-  <!--end::Head-->
+
   <!--begin::Body-->
   <body>
-  	<div layout:fragment="contenidopaginas">
-  		                <div class="card card-info card-outline mb-4">
-                  <!--begin::Header-->
-                  <div class="card-header">
-                    <div class="card-title">INGRESA NUEVO ALUMNO </div>
-                  </div>
-                  <!--end::Header-->
-                  <!--begin::Form-->
-                  <form class="needs-validation" novalidate>
-                    <!--begin::Body-->
-                    <div class="card-body">
-                      <!--begin::Row-->
-                      <div class="row g-3">
-                        <!--begin::Col-->
-                        <div class="col-md-6">
-                          <label for="validationCustom01" class="form-label">Nombres:</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="validationCustom01"
-                            value="Mark"
-                            required
-                          />
-                          <div class="valid-feedback">Looks good!</div>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-md-6">
-                          <label for="validationCustom02" class="form-label">Apellidos:</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="validationCustom02"
-                            value="Otto"
-                            required
-                          />
-                          <div class="valid-feedback">Looks good!</div>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-md-6">
-                          <label for="validationCustomUsername" class="form-label">Username</label>
-                          <div class="input-group has-validation">
-                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="validationCustomUsername"
-                              aria-describedby="inputGroupPrepend"
-                              required
-                            />
-                            <div class="invalid-feedback">Please choose a username.</div>
-                          </div>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-md-6">
-                          <label for="validationCustom03" class="form-label">City</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="validationCustom03"
-                            required
-                          />
-                          <div class="invalid-feedback">Please provide a valid city.</div>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-md-6">
-                          <label for="validationCustom04" class="form-label">State</label>
-                          <select class="form-select" id="validationCustom04" required>
-                            <option selected disabled value="">Choose...</option>
-                            <option>...</option>
-                          </select>
-                          <div class="invalid-feedback">Please select a valid state.</div>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-md-6">
-                          <label for="validationCustom05" class="form-label">Zip</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="validationCustom05"
-                            required
-                          />
-                          <div class="invalid-feedback">Please provide a valid zip.</div>
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-12">
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="invalidCheck"
-                              required
-                            />
-                            <label class="form-check-label" for="invalidCheck">
-                              Agree to terms and conditions
-                            </label>
-                            <div class="invalid-feedback">You must agree before submitting.</div>
-                          </div>
-                        </div>
-                        <!--end::Col-->
-                      </div>
-                      <!--end::Row-->
-                    </div>
-                    <!--end::Body-->
-                    <!--begin::Footer-->
-                    <div class="card-footer">
-                      <button class="btn btn-info" type="submit">Submit form</button>
-                    </div>
-                    <!--end::Footer-->
-                  </form>
-                  <!--end::Form-->
-                  <!--begin::JavaScript-->
-                  <script>
-                    // Example starter JavaScript for disabling form submissions if there are invalid fields
-                    (() => {
-                      'use strict';
+    <div layout:fragment="contenidopaginas">
 
-                      // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                      const forms = document.querySelectorAll('.needs-validation');
+      <div class="card card-info card-outline mb-4">
+        <!--begin::Header-->
+        <div class="card-header">
+          <div class="card-title">INGRESAR NUEVO ALUMNO</div>
+        </div>
+        <!--end::Header-->
 
-                      // Loop over them and prevent submission
-                      Array.from(forms).forEach((form) => {
-                        form.addEventListener(
-                          'submit',
-                          (event) => {
-                            if (!form.checkValidity()) {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }
+        <!--begin::Form-->
+        <form class="needs-validation" novalidate>
+          <!--begin::Body-->
+          <div class="card-body">
+            <!--begin::Row-->
+            <div class="row g-3">
 
-                            form.classList.add('was-validated');
-                          },
-                          false,
-                        );
-                      });
-                    })();
-                  </script>
-                  <!--end::JavaScript-->
+              <!-- Nombres (ejemplo) -->
+              <div class="col-md-6">
+                <label for="validationCustom01" class="form-label">Nombres:</label>
+                <input type="text" class="form-control" id="validationCustom01" value="Mark" required />
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+
+              <!-- Apellidos (ejemplo) -->
+              <div class="col-md-6">
+                <label for="validationCustom02" class="form-label">Apellidos:</label>
+                <input type="text" class="form-control" id="validationCustom02" value="Otto" required />
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+
+              <!-- Username (ejemplo) -->
+              <div class="col-md-6">
+                <label for="validationCustomUsername" class="form-label">Username</label>
+                <div class="input-group has-validation">
+                  <span class="input-group-text">@</span>
+                  <input type="text" class="form-control" id="validationCustomUsername" required />
+                  <div class="invalid-feedback">Please choose a username.</div>
                 </div>
-                <!--end::Form Validation-->
-  	</div>
+              </div>
+
+              <!-- City (ejemplo) -->
+              <div class="col-md-6">
+                <label for="validationCustom03" class="form-label">City</label>
+                <input type="text" class="form-control" id="validationCustom03" required />
+                <div class="invalid-feedback">Please provide a valid city.</div>
+              </div>
+
+              <!-- State (ejemplo) -->
+              <div class="col-md-6">
+                <label for="validationCustom04" class="form-label">State</label>
+                <select class="form-select" id="validationCustom04" required>
+                  <option selected disabled value="">Choose...</option>
+                  <option>...</option>
+                </select>
+                <div class="invalid-feedback">Please select a valid state.</div>
+              </div>
+
+              <!-- Zip (ejemplo) -->
+              <div class="col-md-6">
+                <label for="validationCustom05" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="validationCustom05" required />
+                <div class="invalid-feedback">Please provide a valid zip.</div>
+              </div>
+
+              <!-- ================= CAMPOS DEL ALUMNO ================= -->
+
+              <!-- Cédula -->
+              <div class="col-md-6">
+                <label for="cedula" class="form-label">Cédula</label>
+                <input type="text" class="form-control" id="cedula" placeholder="Ingrese la cédula" required />
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-6">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" placeholder="correo@ejemplo.com" />
+              </div>
+
+              <!-- Teléfono -->
+              <div class="col-md-6">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="telefono" placeholder="0999999999" />
+              </div>
+
+              <!-- Dirección -->
+              <div class="col-md-6">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="direccion" placeholder="Dirección del alumno" />
+              </div>
+
+              <!-- Fecha nacimiento -->
+              <div class="col-md-6">
+                <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimiento" />
+              </div>
+
+              <!-- Estado -->
+              <div class="col-md-6">
+                <label for="estado" class="form-label">Estado</label>
+                <select class="form-select" id="estado" required>
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="A">Activo</option>
+                  <option value="I">Inactivo</option>
+                </select>
+              </div>
+
+              <!-- Checkbox (ejemplo) -->
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="invalidCheck" required />
+                  <label class="form-check-label" for="invalidCheck">
+                    Agree to terms and conditions
+                  </label>
+                  <div class="invalid-feedback">You must agree before submitting.</div>
+                </div>
+              </div>
+
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Body-->
+
+          <!--begin::Footer-->
+          <div class="card-footer">
+            <button class="btn btn-info" type="submit">Submit form</button>
+          </div>
+          <!--end::Footer-->
+        </form>
+        <!--end::Form-->
+
+        <!--begin::JavaScript-->
+        <script>
+          (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach((form) => {
+              form.addEventListener('submit', (event) => {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          })();
+        </script>
+        <!--end::JavaScript-->
+
+      </div>
+    </div>
   </body>
   <!--end::Body-->
 </html>
