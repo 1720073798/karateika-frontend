@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/plantilla/plantillaui.html">
@@ -11,7 +11,7 @@
 
         <div class="card">
             <div class="card-body">
-                <a th:href="@{/comprobantes/nuevocomprobante}" class="btn btn-primary mb-3">Nuevo Comprobante</a>
+                <a th:href="@{/comprobantes/nuevocomprobante}" class="btn btn-success mb-3">Nuevo Comprobante</a>
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
@@ -23,27 +23,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Ejemplo estático (más adelante se llena con datos del backend) -->
-                        <tr>
-                            <td>1</td>
-                            <td>Recibo de Inscripción</td>
-                            <td>/uploads/comprobante_001.pdf</td>
-                            <td>2026-01-15</td>
+                        <tr th:each="comprobante : ${listacomprobantes}">
+                            <td th:text="${comprobante.com_id}"></td>
+                            <td th:text="${comprobante.com_nombre}"></td>
+                            <td th:text="${comprobante.com_ruta_archivo}"></td>
+                            <td th:text="${#temporals.format(comprobante.com_fecha_subida, 'yyyy-MM-dd')}"></td>
                             <td>
                                 <a href="#" class="btn btn-sm btn-info">Ver</a>
                                 <a href="#" class="btn btn-sm btn-warning">Editar</a>
-                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Mensualidad Enero</td>
-                            <td>/uploads/comprobante_002.pdf</td>
-                            <td>2026-01-20</td>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-info">Ver</a>
-                                <a href="#" class="btn btn-sm btn-warning">Editar</a>
-                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a href="#" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Estás seguro que quieres eliminar?');">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>

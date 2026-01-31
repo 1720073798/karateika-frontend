@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/plantilla/plantillaui.html">
@@ -27,35 +27,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Ejemplo estático -->
-                        <tr>
-                            <td>101</td>
-                            <td>Carlos Pérez</td>
-                            <td>Recibo Inscripción</td>
-                            <td>Ene / 2026</td>
-                            <td>$50.00</td>
-                            <td>Efectivo</td>
-                            <td>2026-01-15</td>
-                            <td>Admin</td>
+                        <tr th:each="pago : ${listapagos}">
+                            <td th:text="${pago.pag_id}"></td>
+                            <td th:text="${pago.fkalumno?.alu_nombre} + ' ' + ${pago.fkalumno?.alu_apellido} ?: '—'"></td>
+                            <td th:text="${pago.fkcomprobante?.com_nombre} ?: '—'"></td>
+                            <td th:text="${pago.pag_mes} + ' / ' + ${pago.pag_anio}"></td>
+                            <td th:text="${pago.pag_monto}"></td>
+                            <td th:text="${pago.pag_metodo_pago}"></td>
+                            <td th:text="${#temporals.format(pago.pag_fecha_pago, 'yyyy-MM-dd')}"></td>
+                            <td th:text="${pago.pag_registrado_por}"></td>
                             <td>
                                 <a href="#" class="btn btn-sm btn-info">Ver</a>
                                 <a href="#" class="btn btn-sm btn-warning">Editar</a>
-                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>102</td>
-                            <td>María Gómez</td>
-                            <td>Mensualidad Enero</td>
-                            <td>Ene / 2026</td>
-                            <td>$45.00</td>
-                            <td>Transferencia</td>
-                            <td>2026-01-18</td>
-                            <td>Admin</td>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-info">Ver</a>
-                                <a href="#" class="btn btn-sm btn-warning">Editar</a>
-                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a href="#" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Estás seguro que quieres eliminar?');">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>
