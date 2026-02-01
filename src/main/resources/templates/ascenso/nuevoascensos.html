@@ -15,38 +15,37 @@
             <!--end::Header-->
 
             <!--begin::Form-->
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" novalidate
+                  th:action="@{/ascensos}" th:object="${ascenso}"
+                  method="post">
+
                 <!--begin::Body-->
                 <div class="card-body">
                     <!--begin::Row-->
                     <div class="row g-3">
 
-                        <!-- ID ALUMNO -->
-                        <div class="col-md-12">
-                            <label for="aluId" class="form-label">ID Alumno *</label>
-                            <input type="number" class="form-control" id="aluId" min="1" required />
-                            <div class="invalid-feedback">Ingrese un ID de alumno válido.</div>
-                        </div>
-
                         <!-- CINTURON -->
                         <div class="col-md-12">
                             <label for="ascCinturon" class="form-label">Cinturón a obtener *</label>
                             <input type="text" class="form-control" id="ascCinturon"
-                                   placeholder="Ej: Amarillo, Naranja, Verde..." maxlength="50" required />
+                                   placeholder="Ej: Amarillo, Naranja, Verde..."
+                                   maxlength="50" required />
                             <div class="invalid-feedback">Ingrese el cinturón.</div>
                         </div>
 
                         <!-- FECHA EXAMEN -->
                         <div class="col-md-6">
                             <label for="ascFechaExamen" class="form-label">Fecha de Examen *</label>
-                            <input type="date" class="form-control" id="ascFechaExamen" required />
+                            <input type="date" class="form-control" id="ascFechaExamen"
+                                   required />
                             <div class="invalid-feedback">Seleccione una fecha válida.</div>
                         </div>
 
                         <!-- FECHA ASCENSO -->
                         <div class="col-md-6">
                             <label for="ascFechaAscenso" class="form-label">Fecha de Ascenso *</label>
-                            <input type="date" class="form-control" id="ascFechaAscenso" required />
+                            <input type="date" class="form-control" id="ascFechaAscenso"
+                                   th:field="*{asc_fecha_ascenso}" required />
                             <div class="invalid-feedback">Seleccione una fecha válida.</div>
                         </div>
 
@@ -54,7 +53,8 @@
                         <div class="col-md-6">
                             <label for="ascCalificacion" class="form-label">Calificación *</label>
                             <input type="number" class="form-control" id="ascCalificacion"
-                                   step="0.01" min="0" max="10" placeholder="Ej: 9.50" required />
+                                   step="0.01" min="0" max="10" placeholder="Ej: 9.50"
+                                   th:field="*{asc_calificacion}" required />
                             <div class="invalid-feedback">Ingrese una calificación válida (0 a 10).</div>
                         </div>
 
@@ -62,7 +62,8 @@
                         <div class="col-md-6">
                             <label for="ascEvaluador" class="form-label">Evaluador *</label>
                             <input type="text" class="form-control" id="ascEvaluador"
-                                   placeholder="Ej: Sensei Carlos" maxlength="100" required />
+                                   placeholder="Ej: Sensei Carlos" maxlength="100"
+                                   th:field="*{asc_evaluador}" required />
                             <div class="invalid-feedback">Ingrese el nombre del evaluador.</div>
                         </div>
 
@@ -70,13 +71,15 @@
                         <div class="col-md-12">
                             <label for="ascObservacion" class="form-label">Observación</label>
                             <textarea class="form-control" id="ascObservacion" rows="3"
-                                      placeholder="Observaciones del examen / ascenso..."></textarea>
+                                      placeholder="Observaciones del examen / ascenso..."
+                                      th:field="*{asc_observacion}"></textarea>
                         </div>
 
                         <!-- CERTIFICADO GENERADO -->
                         <div class="col-md-12">
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="ascCertGenerado" />
+                                <input class="form-check-input" type="checkbox" id="ascCertGenerado"
+                                       th:field="*{asc_c_generado}" />
                                 <label class="form-check-label" for="ascCertGenerado">
                                     Certificado generado
                                 </label>
