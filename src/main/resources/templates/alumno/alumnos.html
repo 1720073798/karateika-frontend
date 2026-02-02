@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/plantilla/plantillaui.html">
 
@@ -8,11 +8,9 @@
 </head>
 
 <body>
-
 <div layout:fragment="contenidopaginas">
 
     <div class="card mb-4">
-
         <div class="card-header">
             <h3 class="card-title">LISTADO DE ALUMNOS</h3>
         </div>
@@ -45,101 +43,40 @@
                     <thead class="table-dark sticky-top">
                         <tr>
                             <th style="width:50px;">#</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Cédula</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
-                            <th>Cinturón</th>
-                            <th>Estado</th>
+                            <th class="text-center">Alumno</th>                
+                            <th class="text-center">Cédula</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Teléfono</th>
+                            <th class="text-center">Nombre Representante</th>
+                            <th class="text-center">Teléfono Representante</th>          
+                            <th class="text-center">Cinturón</th>
+                            <th class="text-center">Fecha de Ingreso</th>
+                            <th class="text-center">Estado</th>
+                            <th scope="col" class="text-center">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
                         <!-- FILA 1 -->
-                        <tr>
-                            <td>1</td>
-                            <td>Juan</td>
-                            <td>Pérez</td>
-                            <td>0102030405</td>
-                            <td>juan@mail.com</td>
-                            <td>0999999999</td>
-                            <td>Amarillo</td>
-                            <td>
-                                <span class="badge bg-success">Activo</span>
+                        <tr th:each="alumnos: ${modelAlumno}">
+                            <td th:text= "${alumnos.alu_id}"></td>
+                            <td th:text= "${alumnos.alu_nombre}+' '+${alumnos.alu_apellido}"></td>
+                            <td th:text= "${alumnos.alu_cedula}"></td>
+                            <td th:text= "${alumnos.alu_email}"></td>
+                            <td th:text= "${alumnos.alu_telefono}"></td>
+                            <td th:text= "${alumnos.alu_nombre_representante}"></td>
+                            <td th:text= "${alumnos.alu_telefono_representante}"></td>
+                            <td th:text= "${alumnos.alu_cinturon_actual}"></td>
+                            <td th:text= "${alumnos.alu_fecha_ingreso}"></td>
+                            <td th:text= "${alumnos.alu_estado}"></td>
+                                <td>
+                                <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                                <a href="#" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Estás seguro que quieres eliminar?');">Eliminar</a>
                             </td>
                         </tr>
-
-                        <!-- FILA 2 -->
-                        <tr>
-                            <td>2</td>
-                            <td>Ana</td>
-                            <td>Gómez</td>
-                            <td>0605040302</td>
-                            <td>ana@mail.com</td>
-                            <td>0988888888</td>
-                            <td>Verde</td>
-                            <td>
-                                <span class="badge bg-success">Activo</span>
-                            </td>
-                        </tr>
-
-                        <!-- FILA 3 -->
-                        <tr>
-                            <td>3</td>
-                            <td>Carlos</td>
-                            <td>Ruiz</td>
-                            <td>0912345678</td>
-                            <td>carlos@mail.com</td>
-                            <td>0977777777</td>
-                            <td>Azul</td>
-                            <td>
-                                <span class="badge bg-danger">Inactivo</span>
-                            </td>
-                        </tr>
-
-                        <!-- FILA 4 -->
-                        <tr>
-                            <td>4</td>
-                            <td>María</td>
-                            <td>López</td>
-                            <td>0123456789</td>
-                            <td>maria@mail.com</td>
-                            <td>0966666666</td>
-                            <td>Marrón</td>
-                            <td>
-                                <span class="badge bg-success">Activo</span>
-                            </td>
-                        </tr>
-
-                        <!-- FILA 5 -->
-                        <tr>
-                            <td>5</td>
-                            <td>Pedro</td>
-                            <td>Torres</td>
-                            <td>0987654321</td>
-                            <td>pedro@mail.com</td>
-                            <td>0955555555</td>
-                            <td>Negro</td>
-                            <td>
-                                <span class="badge bg-success">Activo</span>
-                            </td>
-                        </tr>
-
-                        <!-- AGREGA MÁS FILAS SI QUIERES PROBAR SCROLL -->
-                        <tr>
-                            <td>6</td>
-                            <td>Lucía</td>
-                            <td>Vera</td>
-                            <td>1234567890</td>
-                            <td>lucia@mail.com</td>
-                            <td>0944444444</td>
-                            <td>Blanco</td>
-                            <td>
-                                <span class="badge bg-danger">Inactivo</span>
-                            </td>
-                        </tr>
+                
 
                     </tbody>
 

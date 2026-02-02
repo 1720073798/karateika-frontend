@@ -1,145 +1,165 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/plantilla/plantillaui.html">
-  <head>
-    <title>Nuevo Alumno</title>
-  </head>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/plantilla/plantillaui.html">
+<head>
+<title>Nuevo Alumno</title>
+</head>
 
-  <!--begin::Body-->
-  <body>
-    <div layout:fragment="contenidopaginas">
+<!--begin::Body-->
+<body>
+	<div layout:fragment="contenidopaginas">
 
-      <div class="card card-info card-outline mb-4">
-        <!--begin::Header-->
-        <div class="card-header">
-          <div class="card-title">INGRESAR NUEVO ALUMNO</div>
-        </div>
-        <!--end::Header-->
+		<div class="card card-info card-outline mb-4">
+			<!--begin::Header-->
+			<div class="card-header">
+				<div class="card-title">INGRESAR NUEVO ALUMNO</div>
+			</div>
+			<!--end::Header-->
 
-        <!--begin::Form-->
-        <form class="needs-validation" novalidate>
-          <!--begin::Body-->
-          <div class="card-body">
-            <!--begin::Row-->
-            <div class="row g-3">
+			<!--begin::Form-->
+			<form th:action="@{/alumnos}" th:Object="${modelAlumno}"
+				method="post">
+				<!--begin::Body-->
+				<div class="card-body">
+					<!--begin::Row-->
+					<div class="row g-3">
 
-              <!-- Nombres (ejemplo) -->
-              <div class="col-md-6">
-                <label for="validationCustom01" class="form-label">Nombres:</label>
-                <input type="text" class="form-control" id="validationCustom01" value="Mark" required />
-                <div class="valid-feedback">Looks good!</div>
-              </div>
+						<!-- Nombres (ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom01" class="form-label">Nombres:</label>
+							<input type="text" class="form-control" id="txtnombrealumno"
+								th:field="*{alu_nombre}" />
+						</div>
 
-              <!-- Apellidos (ejemplo) -->
-              <div class="col-md-6">
-                <label for="validationCustom02" class="form-label">Apellidos:</label>
-                <input type="text" class="form-control" id="validationCustom02" value="Otto" required />
-                <div class="valid-feedback">Looks good!</div>
-              </div>
+						<!-- Apellidos (ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Apellidos:</label>
+							<input type="text" class="form-control" id="txtapellidoalumno"
+								th:field="*{alu_apellido}" />
+						</div>
 
-              <!-- Username (ejemplo) -->
-              <div class="col-md-6">
-                <label for="validationCustomUsername" class="form-label">Username</label>
-                <div class="input-group has-validation">
-                  <span class="input-group-text">@</span>
-                  <input type="text" class="form-control" id="validationCustomUsername" required />
-                  <div class="invalid-feedback">Please choose a username.</div>
-                </div>
-              </div>
+						<!-- cedeula (ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Cedula:</label>
+							<input type="text" class="form-control" id="txtcedeulaalumno"
+								th:field="*{alu_cedula}" />
+						</div>
 
-              <!-- City (ejemplo) -->
-              <div class="col-md-6">
-                <label for="validationCustom03" class="form-label">City</label>
-                <input type="text" class="form-control" id="validationCustom03" required />
-                <div class="invalid-feedback">Please provide a valid city.</div>
-              </div>
+						<!--  email(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Email:</label>
+							<input type="email" class="form-control" id="txtemailalumno"
+								th:field="*{alu_email}" placeholder="correo@ejemplo.com" />
+						</div>
 
-              <!-- State (ejemplo) -->
-              <div class="col-md-6">
-                <label for="validationCustom04" class="form-label">State</label>
-                <select class="form-select" id="validationCustom04" required>
-                  <option selected disabled value="">Choose...</option>
-                  <option>...</option>
-                </select>
-                <div class="invalid-feedback">Please select a valid state.</div>
-              </div>
+						<!--  direccion(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Domicilio:</label>
+							<input type="text" class="form-control" id="txtdireccionalumno"
+								th:field="*{alu_direccion}" />
+						</div>
 
-              <!-- Zip (ejemplo) -->
-              <div class="col-md-6">
-                <label for="validationCustom05" class="form-label">Zip</label>
-                <input type="text" class="form-control" id="validationCustom05" required />
-                <div class="invalid-feedback">Please provide a valid zip.</div>
-              </div>
+						<!--  telefono(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Teléfono:</label>
+							<input type="text" class="form-control" id="txttelefonolumno"
+								th:field="*{alu_telefono}" />
+						</div>
 
-              <!-- ================= CAMPOS DEL ALUMNO ================= -->
 
-              <!-- Cédula -->
-              <div class="col-md-6">
-                <label for="cedula" class="form-label">Cédula</label>
-                <input type="text" class="form-control" id="cedula" placeholder="Ingrese la cédula" required />
-              </div>
+						<!--  nacimiento(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Fecha
+								de Nacimiento:</label> <input type="date" class="form-control"
+								id="txtnacimientolumno" th:field="*{alu_fecha_nacimiento}" />
+						</div>
 
-              <!-- Email -->
-              <div class="col-md-6">
-                <label for="email" class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="email" placeholder="correo@ejemplo.com" />
-              </div>
+						<!--  ingreso(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Fecha
+								de Ingreso:</label> <input type="date" class="form-control"
+								id="txtnacimientolumno" th:field="*{alu_fecha_ingreso}" />
+						</div>
 
-              <!-- Teléfono -->
-              <div class="col-md-6">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telefono" placeholder="0999999999" />
-              </div>
 
-              <!-- Dirección -->
-              <div class="col-md-6">
-                <label for="direccion" class="form-label">Dirección</label>
-                <input type="text" class="form-control" id="direccion" placeholder="Dirección del alumno" />
-              </div>
 
-              <!-- Fecha nacimiento -->
-              <div class="col-md-6">
-                <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
-                <input type="date" class="form-control" id="fechaNacimiento" />
-              </div>
 
-              <!-- Estado -->
-              <div class="col-md-6">
-                <label for="estado" class="form-label">Estado</label>
-                <select class="form-select" id="estado" required>
-                  <option selected disabled value="">Seleccione...</option>
-                  <option value="A">Activo</option>
-                  <option value="I">Inactivo</option>
-                </select>
-              </div>
+						<!--  nombre representante(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Nombre
+								de Representante:</label> <input type="text" class="form-control"
+								id="txtnacimientolumno" th:field="*{alu_nombre_representante}" />
+						</div>
 
-              <!-- Checkbox (ejemplo) -->
-              <div class="col-12">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="invalidCheck" required />
-                  <label class="form-check-label" for="invalidCheck">
-                    Agree to terms and conditions
-                  </label>
-                  <div class="invalid-feedback">You must agree before submitting.</div>
-                </div>
-              </div>
+						<!--  telefono representante(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Telefono
+								de Representante:</label> <input type="text" class="form-control"
+								id="txtnacimientolumno" th:field="*{alu_telefono_representante}" />
+						</div>
 
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Body-->
 
-          <!--begin::Footer-->
-          <div class="card-footer">
-            <button class="btn btn-info" type="submit">Submit form</button>
-          </div>
-          <!--end::Footer-->
-        </form>
-        <!--end::Form-->
+						<!--  nombre representante(ejemplo) -->
 
-        <!--begin::JavaScript-->
-        <script>
+
+
+
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">cinturon
+								2 de:</label> <input type="text" class="form-control"
+								id="txtcinturonalumno" th:field="*{alu_cinturon_actual}" />
+						</div>
+
+						<!--  (ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">cinturon
+								1 :</label> <input type="text" class="form-control"
+								id="txtcinturoninlumno" th:field="*{alu_cinturon_ingreso}" />
+						</div>
+
+						<div class="col-md-6 form-check mt-4">
+							<input type="checkbox" class="form-check-input" id="estado"
+								name="alu_estado" value="A"> <label
+								class="form-check-label" for="estado"> Activo </label>
+						</div>
+
+						<!--  nacimiento(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Fecha
+								de Nacimiento:</label> <input type="date" class="form-control"
+								id="txtnacimientolumno" th:field="*{alu_fecha_modificacion}" />
+						</div>
+
+						<!--  ingreso(ejemplo) -->
+						<div class="col-md-6">
+							<label for="validationCustom02" class="form-label">Fecha
+								de Ingreso:</label> <input type="date" class="form-control"
+								id="txtnacimientolumno" th:field="*{alu_fecha_creacion}" />
+						</div>
+
+						<div class="col-md-6 form-check mt-4">
+							<input type="checkbox" class="form-check-input" id="alertaPago"
+								th:field="*{alu_alerta_pago}"> <label
+								class="form-check-label" for="alertaPago"> Alerta de
+								pago </label>
+						</div>
+
+					</div>
+					<!--end::Row-->
+				</div>
+				<!--end::Body-->
+
+				<!--begin::Footer-->
+				<div class="card-footer">
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+				<!--end::Footer-->
+			</form>
+			<!--end::Form-->
+
+			<!--begin::JavaScript-->
+			<script>
           (() => {
             'use strict';
             const forms = document.querySelectorAll('.needs-validation');
@@ -154,10 +174,10 @@
             });
           })();
         </script>
-        <!--end::JavaScript-->
+			<!--end::JavaScript-->
 
-      </div>
-    </div>
-  </body>
-  <!--end::Body-->
+		</div>
+	</div>
+</body>
+<!--end::Body-->
 </html>

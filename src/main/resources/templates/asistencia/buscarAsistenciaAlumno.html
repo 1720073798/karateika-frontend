@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/plantilla/plantillaui.html">
 
@@ -60,53 +60,26 @@
                     <thead class="table-dark sticky-top">
                         <tr>
                             <th style="width:50px;">#</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th class="text-center">Estado</th>
+                            <th class="text-center">Alumno</th>
                             <th class="text-center">Fecha</th>
-                            <th>Observación</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Observación</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
                         <!-- REGISTRO 1 -->
-                        <tr>
-                            <td>1</td>
-                            <td>Juan</td>
-                            <td>Pérez</td>
-                            <td class="text-center">
-                                <span class="badge bg-success">Asiste</span>
+                        <tr th:each="asistencias: ${asistenciaModel}">
+                            <td th:text="${asistencias.asi_id}"></td>
+                            <td th:text="${asistencias.fkalumno.alu_nombre}+' '+ ${asistencias.fkalumno.alu_apellido}">Juan</td>
+                            <td th:text="${asistencias.asi_fecha}"></td>
+                            <td class="text-center" th:text="${asistencias.asi_estado}">
+                                <span class="badge bg-success"></span>
                             </td>
-                            <td class="text-center">2026-01-10</td>
-                            <td>Asistió puntual</td>
+                            <td class="text-center" th:text="${asistencias.asi_observacion}"></td>
                         </tr>
-
-                        <!-- REGISTRO 2 -->
-                        <tr>
-                            <td>2</td>
-                            <td>Juan</td>
-                            <td>Pérez</td>
-                            <td class="text-center">
-                                <span class="badge bg-danger">No asiste</span>
-                            </td>
-                            <td class="text-center">2026-01-12</td>
-                            <td>Falta sin aviso</td>
-                        </tr>
-
-                        <!-- REGISTRO 3 -->
-                        <tr>
-                            <td>3</td>
-                            <td>Juan</td>
-                            <td>Pérez</td>
-                            <td class="text-center">
-                                <span class="badge bg-success">Asiste</span>
-                            </td>
-                            <td class="text-center">2026-01-14</td>
-                            <td>-</td>
-                        </tr>
-
-                        <!-- AGREGA MÁS REGISTROS SI QUIERES -->
+            
 
                     </tbody>
 

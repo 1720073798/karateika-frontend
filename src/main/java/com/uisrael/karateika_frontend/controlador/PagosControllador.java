@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.uisrael.karateika_frontend.modelo.dto.request.PagosDTORequest;
 import com.uisrael.karateika_frontend.modelo.dto.response.PagosDTOResponse;
-import com.uisrael.karateika_frontend.service.IAlumnoServicio;
 import com.uisrael.karateika_frontend.service.IComprobanteServicio;
 import com.uisrael.karateika_frontend.service.IPagosServicio;
 
