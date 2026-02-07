@@ -5,7 +5,6 @@ import com.uisrael.karateika_frontend.modelo.enums.Cinturon;
 import java.util.Arrays;
 import java.util.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.Period;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,20 @@ public class AlumnoControllador {
 	
 	@PostMapping
 	public String guardar (@ModelAttribute AlumnoDTORequest alumno, Model model) {
+		// Validación: la cédula no debe estar registrada
+		if (alumno.getAlu_cedula() != null && !alumno.getAlu_cedula().trim().isEmpty()) {
+			String cedula = alumno.getAlu_cedula().trim();
+			List<AlumnoDTOResponse> existentes = servicioAlumno.listarAlumno();
+			boolean existe = existentes != null && existentes.stream()
+				.anyMatch(a -> a.getAlu_cedula() != null && a.getAlu_cedula().trim().equalsIgnoreCase(cedula));
+			if (existe) {
+				model.addAttribute("modelAlumno", alumno);
+				model.addAttribute("cinturones", Arrays.asList(Cinturon.values()));
+				model.addAttribute("cedulaError", "Usuario ya está registrado");
+				return "/alumno/nuevoAlumno";
+			}
+		}
+
 		// Validación: la fecha de nacimiento debe indicar al menos 4 años de edad
 		if (alumno.getAlu_fecha_nacimiento() != null) {
 			LocalDate fechaNac = alumno.getAlu_fecha_nacimiento();
@@ -57,6 +70,18 @@ public class AlumnoControllador {
 				return "/alumno/nuevoAlumno";
 			}
 		}
+		// Validación: la fecha de ingreso no puede ser posterior a hoy (no la forzamos, solo la rechazamos)
+		if (alumno.getAlu_fecha_ingreso() != null) {
+			LocalDate fechaIngreso = alumno.getAlu_fecha_ingreso();
+			LocalDate hoy = LocalDate.now();
+			if (fechaIngreso.isAfter(hoy)) {
+				model.addAttribute("modelAlumno", alumno);
+				model.addAttribute("cinturones", Arrays.asList(Cinturon.values()));
+				model.addAttribute("fechaError", "La fecha de ingreso no puede ser posterior a la fecha actual.");
+				return "/alumno/nuevoAlumno";
+			}
+		}
+		// No forzar fecha de ingreso en el servidor — el campo lo gestiona el usuario; el cliente bloquea fechas futuras
 		alumno.setAlu_fecha_creacion(new Date());
 		alumno.setAlu_fecha_modificacion(new Date());
 		alumno.setAlu_alerta_pago(true);

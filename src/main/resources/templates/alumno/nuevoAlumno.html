@@ -22,68 +22,76 @@
 				method="post" class="needs-validation" novalidate>
 				<!--begin::Body-->
 				<div class="card-body">
-				<!-- Mensaje de error proveniente del servidor -->
-				<div th:if="${fechaError}" class="alert alert-danger" th:text="${fechaError}"></div>
+					<!-- Mensaje de error proveniente del servidor -->
+					<div th:if="${fechaError}" class="alert alert-danger"
+						th:text="${fechaError}"></div>
 					<!--begin::Row-->
 					<div class="row g-3">
 
 						<!-- Nombres (ejemplo) -->
 						<div class="col-md-6">
-							<label for="validationCustom01" class="form-label">Nombres:</label>
+							<label for="validationCustom01" class="form-label">Nombres:*</label>
 							<input type="text" class="form-control" id="txtnombrealumno"
-								th:field="*{alu_nombre}" />
+								th:field="*{alu_nombre}" required />
 						</div>
 
 						<!-- Apellidos (ejemplo) -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Apellidos:</label>
-							<input type="text" class="form-control" id="txtapellidoalumno"
+							<label for="validationCustom02" class="form-label">Apellidos:*</label>
+							<input type="text" class="form-control" id="txtapellidoalumno" required
 								th:field="*{alu_apellido}" />
 						</div>
 
 						<!-- cedeula (ejemplo) -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Cedula:</label>
+							<label for="validationCustom02" class="form-label">Cedula:*</label>
 							<input type="text" class="form-control" id="txtcedeulaalumno"
-								th:field="*{alu_cedula}" />
+								th:field="*{alu_cedula}" maxlength="10" minlength="10"
+								pattern="[0-9]{10}" required />
+							<!-- Mensaje de error de cédula (server-side) -->
+							<div th:if="${cedulaError}" class="invalid-feedback d-block"
+								th:text="${cedulaError}"></div>
+							<!-- Mensaje de validación cliente -->
+							<div id="cedulaFeedback" class="invalid-feedback"
+								style="display: none"></div>
 						</div>
 
 						<!--  email(ejemplo) -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Email:</label>
+							<label for="validationCustom02" class="form-label">Email:*</label>
 							<input type="email" class="form-control" id="txtemailalumno"
-								th:field="*{alu_email}" placeholder="correo@ejemplo.com" />
+								th:field="*{alu_email}" placeholder="correo@ejemplo.com" required/>
 						</div>
 
 						<!--  direccion(ejemplo) -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Domicilio:</label>
+							<label for="validationCustom02" class="form-label">Domicilio:*</label>
 							<input type="text" class="form-control" id="txtdireccionalumno"
-								th:field="*{alu_direccion}" />
+								th:field="*{alu_direccion}" required/>
 						</div>
 
 						<!--  telefono(ejemplo) -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Teléfono:</label>
+							<label for="validationCustom02" class="form-label">Teléfono:*</label>
 							<input type="text" class="form-control" id="txttelefonolumno"
-								th:field="*{alu_telefono}" />
+								pattern="[0-9]{10}" th:field="*{alu_telefono}" required />
 						</div>
 
 
 						<!--  nacimiento(ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Fecha
-								de Nacimiento:</label> <input type="date" class="form-control"
-								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" />
-						
+								de Nacimiento:*</label> <input type="date" class="form-control"
+								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" required/>
+
 						</div>
 
 
 						<!--  ingreso(ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Fecha
-								de Ingreso:</label> <input type="date" class="form-control"
-								id="txtnacimientolumno" th:field="*{alu_fecha_ingreso}" />
+								de Ingreso:*</label> <input type="date" class="form-control"
+								id="fechaIngreso" th:field="*{alu_fecha_ingreso}" required />
 						</div>
 
 
@@ -98,7 +106,8 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Telefono
 								de Representante:</label> <input type="text" class="form-control"
-								id="txtnacimientolumno" required th:field="*{alu_telefono_representante}" />
+								id="txtnacimientolumno" 
+								th:field="*{alu_telefono_representante}" />
 						</div>
 
 
@@ -107,8 +116,8 @@
 						<!-- Cinturon de ingreso -->
 						<div class="col-md-6">
 							<label for="cbcinturoningreso" class="form-label">Cinturón
-								de Ingreso</label> <select class="form-select" id="cbcinturoningreso"
-								th:field="*{alu_cinturon_ingreso}">
+								de Ingreso:*</label> <select class="form-select" id="cbcinturoningreso"
+								th:field="*{alu_cinturon_ingreso}" required>
 
 								<option value="">Seleccione...</option>
 								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
@@ -122,8 +131,8 @@
 						<!-- Cinturon de ingreso -->
 						<div class="col-md-6">
 							<label for="cbcinturoningreso" class="form-label">Cinturón
-								Actual</label> <select class="form-select" id="cbcinturoningreso"
-								th:field="*{alu_cinturon_actual}">
+								Actual:*</label> <select class="form-select" id="cbcinturoningreso"
+								th:field="*{alu_cinturon_actual}" required>
 
 								<option value="">Seleccione...</option>
 								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
@@ -136,7 +145,7 @@
 
 						<div class="col-md-6 form-check mt-4">
 							<input type="checkbox" class="form-check-input" id="estado"
-								name="alu_estado" value="A"> <label
+								name="alu_estado" value="A" required> <label
 								class="form-check-label" for="estado"> Activo </label>
 						</div>
 
@@ -168,6 +177,14 @@
 					return `${yy}-${mm}-${dd}`;
 				}
 
+				function hoyString() {
+					const hoy = new Date();
+					const yy = hoy.getFullYear();
+					const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+					const dd = String(hoy.getDate()).padStart(2, '0');
+					return `${yy}-${mm}-${dd}`;
+				}
+
 				const fechaInput = document.getElementById('fechaNacimiento');
 				if (fechaInput) {
 					const maxFecha = fechaMaximaMenosAnios(4);
@@ -184,6 +201,60 @@
 					});
 				}
 
+				// Fecha de ingreso: permitir cualquier fecha hasta hoy (bloquear solo fechas posteriores)
+				const fechaIngresoInput = document.getElementById('fechaIngreso');
+				if (fechaIngresoInput) {
+					const hoy = hoyString();
+					// Establecer solo el atributo max a hoy para evitar fechas futuras
+					fechaIngresoInput.max = hoy;
+					// Mensaje si el usuario selecciona una fecha futura (por ejemplo editando manualmente)
+					fechaIngresoInput.addEventListener('input', function () {
+						if (this.value && this.value > this.max) {
+							this.setCustomValidity('No se permiten fechas posteriores a la fecha actual.');
+						} else {
+							this.setCustomValidity('');
+						}
+					});
+				}
+
+				// Validación de cédula en tiempo real (cliente) consultando la API
+				const cedulaInput = document.getElementById('txtcedeulaalumno');
+				const cedulaFeedback = document.getElementById('cedulaFeedback');
+				let cedulasExistentes = null; // cache
+				async function cargarCedulas() {
+					if (cedulasExistentes !== null) return cedulasExistentes;
+					try {
+						const resp = await fetch('/api/alumnos');
+						if (!resp.ok) return [];
+						const data = await resp.json();
+						cedulasExistentes = data.map(a => a.alu_cedula ? a.alu_cedula.trim().toLowerCase() : null).filter(Boolean);
+						return cedulasExistentes;
+					} catch (e) {
+						console.error('No se pudo cargar cedulas', e);
+						return [];
+					}
+				}
+
+				if (cedulaInput) {
+					cedulaInput.addEventListener('input', async function () {
+						const val = this.value ? this.value.trim().toLowerCase() : '';
+						if (!val) {
+							cedulaFeedback.style.display = 'none';
+							this.classList.remove('is-invalid');
+							return;
+						}
+						const list = await cargarCedulas();
+						if (list.includes(val)) {
+							cedulaFeedback.textContent = 'Usuario ya está registrado';
+							cedulaFeedback.style.display = 'block';
+							this.classList.add('is-invalid');
+						} else {
+							cedulaFeedback.style.display = 'none';
+							this.classList.remove('is-invalid');
+						}
+					});
+				}
+
 				// Validación de formulario (Bootstrap-like)
 				const forms = document.querySelectorAll('.needs-validation');
 				Array.from(forms).forEach(function (form) {
@@ -191,6 +262,14 @@
 						// comprueba fechaNacimiento antes de checkValidity para mostrar mensaje adecuado
 						if (fechaInput && fechaInput.value && fechaInput.value > fechaInput.max) {
 							fechaInput.setCustomValidity('El alumno debe tener al menos 4 años.');
+						}
+						// comprueba fechaIngreso para no permitir fechas posteriores a hoy
+						if (fechaIngresoInput && fechaIngresoInput.value && fechaIngresoInput.value > fechaIngresoInput.max) {
+							fechaIngresoInput.setCustomValidity('No se permiten fechas posteriores a la fecha actual.');
+						}
+						// comprueba cédula cliente
+						if (cedulaInput && cedulaInput.value && cedulaInput.classList.contains('is-invalid')) {
+							cedulaInput.setCustomValidity('Usuario ya está registrado');
 						}
 						if (!form.checkValidity()) {
 							event.preventDefault();
