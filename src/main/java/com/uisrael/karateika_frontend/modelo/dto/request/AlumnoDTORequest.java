@@ -1,6 +1,7 @@
 package com.uisrael.karateika_frontend.modelo.dto.request;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -22,7 +23,7 @@ public class AlumnoDTORequest {
 	private String alu_telefono_representante;
 	private char alu_estado;
 	private boolean alu_alerta_pago;
-	private LocalDate alu_fecha_creacion;
-	private LocalDate alu_fecha_modificacion;
+	private Date alu_fecha_creacion;
+	private Date alu_fecha_modificacion;
 	
 }

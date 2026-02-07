@@ -18,10 +18,12 @@
 			<!--end::Header-->
 
 			<!--begin::Form-->
-			<form th:action="@{/alumnos}" th:Object="${modelAlumno}"
-				method="post">
+			<form th:action="@{/alumnos}" th:object="${modelAlumno}"
+				method="post" class="needs-validation" novalidate>
 				<!--begin::Body-->
 				<div class="card-body">
+				<!-- Mensaje de error proveniente del servidor -->
+				<div th:if="${fechaError}" class="alert alert-danger" th:text="${fechaError}"></div>
 					<!--begin::Row-->
 					<div class="row g-3">
 
@@ -72,8 +74,10 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Fecha
 								de Nacimiento:</label> <input type="date" class="form-control"
-								id="txtnacimientolumno" th:field="*{alu_fecha_nacimiento}" />
+								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" />
+						
 						</div>
+
 
 						<!--  ingreso(ejemplo) -->
 						<div class="col-md-6">
@@ -81,8 +85,6 @@
 								de Ingreso:</label> <input type="date" class="form-control"
 								id="txtnacimientolumno" th:field="*{alu_fecha_ingreso}" />
 						</div>
-
-
 
 
 						<!--  nombre representante(ejemplo) -->
@@ -96,53 +98,46 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Telefono
 								de Representante:</label> <input type="text" class="form-control"
-								id="txtnacimientolumno" th:field="*{alu_telefono_representante}" />
+								id="txtnacimientolumno" required th:field="*{alu_telefono_representante}" />
 						</div>
 
 
 						<!--  nombre representante(ejemplo) -->
 
-
-
-
+						<!-- Cinturon de ingreso -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">cinturon
-								2 de:</label> <input type="text" class="form-control"
-								id="txtcinturonalumno" th:field="*{alu_cinturon_actual}" />
+							<label for="cbcinturoningreso" class="form-label">Cinturón
+								de Ingreso</label> <select class="form-select" id="cbcinturoningreso"
+								th:field="*{alu_cinturon_ingreso}">
+
+								<option value="">Seleccione...</option>
+								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
+								<th:block th:each="cinturon : ${cinturones}">
+									<option th:value="${cinturon.name()}"
+										th:text="${cinturon.nombre}"></option>
+								</th:block>
+							</select>
 						</div>
 
-						<!--  (ejemplo) -->
+						<!-- Cinturon de ingreso -->
 						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">cinturon
-								1 :</label> <input type="text" class="form-control"
-								id="txtcinturoninlumno" th:field="*{alu_cinturon_ingreso}" />
+							<label for="cbcinturoningreso" class="form-label">Cinturón
+								Actual</label> <select class="form-select" id="cbcinturoningreso"
+								th:field="*{alu_cinturon_actual}">
+
+								<option value="">Seleccione...</option>
+								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
+								<th:block th:each="cinturon : ${cinturones}">
+									<option th:value="${cinturon.name()}"
+										th:text="${cinturon.nombre}"></option>
+								</th:block>
+							</select>
 						</div>
 
 						<div class="col-md-6 form-check mt-4">
 							<input type="checkbox" class="form-check-input" id="estado"
 								name="alu_estado" value="A"> <label
 								class="form-check-label" for="estado"> Activo </label>
-						</div>
-
-						<!--  nacimiento(ejemplo) -->
-						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Fecha
-								de Nacimiento:</label> <input type="date" class="form-control"
-								id="txtnacimientolumno" th:field="*{alu_fecha_modificacion}" />
-						</div>
-
-						<!--  ingreso(ejemplo) -->
-						<div class="col-md-6">
-							<label for="validationCustom02" class="form-label">Fecha
-								de Ingreso:</label> <input type="date" class="form-control"
-								id="txtnacimientolumno" th:field="*{alu_fecha_creacion}" />
-						</div>
-
-						<div class="col-md-6 form-check mt-4">
-							<input type="checkbox" class="form-check-input" id="alertaPago"
-								th:field="*{alu_alerta_pago}"> <label
-								class="form-check-label" for="alertaPago"> Alerta de
-								pago </label>
 						</div>
 
 					</div>
@@ -160,24 +155,58 @@
 
 			<!--begin::JavaScript-->
 			<script>
-          (() => {
-            'use strict';
-            const forms = document.querySelectorAll('.needs-validation');
-            Array.from(forms).forEach((form) => {
-              form.addEventListener('submit', (event) => {
-                if (!form.checkValidity()) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-              }, false);
-            });
-          })();
-        </script>
+			// Validación: la fecha de nacimiento máxima permitida es hoy - 4 años
+			(function () {
+				'use strict';
+				// Calcula la fecha máxima (YYYY-MM-DD) restando 4 años a la fecha actual
+				function fechaMaximaMenosAnios(anios) {
+					const hoy = new Date();
+					const max = new Date(hoy.getFullYear() - anios, hoy.getMonth(), hoy.getDate());
+					const yy = max.getFullYear();
+					const mm = String(max.getMonth() + 1).padStart(2, '0');
+					const dd = String(max.getDate()).padStart(2, '0');
+					return `${yy}-${mm}-${dd}`;
+				}
+
+				const fechaInput = document.getElementById('fechaNacimiento');
+				if (fechaInput) {
+					const maxFecha = fechaMaximaMenosAnios(4);
+					// Asignar atributo max para que el selector de fecha no permita días posteriores
+					fechaInput.max = maxFecha;
+
+					// Mensaje de validación personalizado si el usuario introduce una fecha inválida
+					fechaInput.addEventListener('input', function () {
+						if (this.value && this.value > this.max) {
+							this.setCustomValidity('El alumno debe tener al menos 4 años. Seleccione una fecha anterior o igual a ' + this.max + '.');
+						} else {
+							this.setCustomValidity('');
+						}
+					});
+				}
+
+				// Validación de formulario (Bootstrap-like)
+				const forms = document.querySelectorAll('.needs-validation');
+				Array.from(forms).forEach(function (form) {
+					form.addEventListener('submit', function (event) {
+						// comprueba fechaNacimiento antes de checkValidity para mostrar mensaje adecuado
+						if (fechaInput && fechaInput.value && fechaInput.value > fechaInput.max) {
+							fechaInput.setCustomValidity('El alumno debe tener al menos 4 años.');
+						}
+						if (!form.checkValidity()) {
+							event.preventDefault();
+							event.stopPropagation();
+						}
+						form.classList.add('was-validated');
+					}, false);
+				});
+			})();
+			</script>
 			<!--end::JavaScript-->
 
 		</div>
 	</div>
+
+
 </body>
 <!--end::Body-->
 </html>
