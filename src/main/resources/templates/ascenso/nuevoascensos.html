@@ -1,109 +1,126 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/plantilla/plantillaui.html">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/plantilla/plantillaui.html">
 <head>
-    <title>Nuevo Ascenso</title>
+<title>Nuevo Ascenso</title>
 </head>
 <body>
-    <div layout:fragment="contenidopaginas">
-        <div class="card card-info card-outline mb-4">
-            <!--begin::Header-->
-            <div class="card-header">
-                <div class="card-title">NUEVO ASCENSO</div>
-            </div>
-            <!--end::Header-->
+	<div layout:fragment="contenidopaginas">
+		<div class="card card-info card-outline mb-4">
+			<!--begin::Header-->
+			<div class="card-header">
+				<div class="card-title">NUEVO ASCENSO</div>
+			</div>
+			<!--end::Header-->
 
-            <!--begin::Form-->
-            <form class="needs-validation" novalidate
-                  th:action="@{/ascensos}" th:object="${ascenso}"
-                  method="post">
+			<!--begin::Form-->
+			<form class="needs-validation" novalidate th:action="@{/ascensos}"
+				th:object="${ascenso}" method="post">
 
-                <!--begin::Body-->
-                <div class="card-body">
-                    <!--begin::Row-->
-                    <div class="row g-3">
+				<!--begin::Body-->
+				<div class="card-body">
+					<!--begin::Row-->
+					<div class="row g-3">
 
-                        <!-- CINTURON -->
-                        <div class="col-md-12">
-                            <label for="ascCinturon" class="form-label">Cinturón a obtener *</label>
-                            <input type="text" class="form-control" id="ascCinturon"
-                                   placeholder="Ej: Amarillo, Naranja, Verde..."
-                                   maxlength="50" required />
-                            <div class="invalid-feedback">Ingrese el cinturón.</div>
-                        </div>
+						<div class="col-md-6">
+							<label for="cbalumno" class="form-label">Alumno </label> <select
+								id="cbalumno" class="form-select" th:field="*{fkalumno.alu_id}">
+								<option value="0">--Seleccione categoría--</option>
+								<option th:each="alumnos : ${alumnoModel}"
+									th:value="${alumnos.alu_id}"
+									th:text="${alumnos.alu_nombre}+' '+${alumnos.alu_apellido}"></option>
+							</select>
+						</div>
 
-                        <!-- FECHA EXAMEN -->
-                        <div class="col-md-6">
-                            <label for="ascFechaExamen" class="form-label">Fecha de Examen *</label>
-                            <input type="date" class="form-control" id="ascFechaExamen"
-                                   required />
-                            <div class="invalid-feedback">Seleccione una fecha válida.</div>
-                        </div>
+						<!-- CINTURON -->
+						<div class="col-md-6">
+							<label for="cbcinturon" class="form-label">Nuevo
+								Cinturon:*</label> <select class="form-select" id="cbcinturon"
+								th:field="*{asc_cinturon}" required>
 
-                        <!-- FECHA ASCENSO -->
-                        <div class="col-md-6">
-                            <label for="ascFechaAscenso" class="form-label">Fecha de Ascenso *</label>
-                            <input type="date" class="form-control" id="ascFechaAscenso"
-                                   th:field="*{asc_fecha_ascenso}" required />
-                            <div class="invalid-feedback">Seleccione una fecha válida.</div>
-                        </div>
+								<option value="">Seleccione...</option>
+								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
+								<th:block th:each="cinturon : ${cinturones}">
+									<option th:value="${cinturon.name()}"
+										th:text="${cinturon.nombre}"></option>
+								</th:block>
+							</select>
+						</div>
 
-                        <!-- CALIFICACION -->
-                        <div class="col-md-6">
-                            <label for="ascCalificacion" class="form-label">Calificación *</label>
-                            <input type="number" class="form-control" id="ascCalificacion"
-                                   step="0.01" min="0" max="10" placeholder="Ej: 9.50"
-                                   th:field="*{asc_calificacion}" required />
-                            <div class="invalid-feedback">Ingrese una calificación válida (0 a 10).</div>
-                        </div>
+						<!-- FECHA EXAMEN -->
+						<div class="col-md-6">
+							<label for="ascFechaExamen" class="form-label">Fecha de
+								Examen *</label> <input type="date" class="form-control"
+								id="ascFechaExamen" th:field="*{asc_fecha_examen}" required />
+							<div class="invalid-feedback">Seleccione una fecha válida.</div>
+						</div>
 
-                        <!-- EVALUADOR -->
-                        <div class="col-md-6">
-                            <label for="ascEvaluador" class="form-label">Evaluador *</label>
-                            <input type="text" class="form-control" id="ascEvaluador"
-                                   placeholder="Ej: Sensei Carlos" maxlength="100"
-                                   th:field="*{asc_evaluador}" required />
-                            <div class="invalid-feedback">Ingrese el nombre del evaluador.</div>
-                        </div>
+						<!-- FECHA ASCENSO -->
+						<div class="col-md-6">
+							<label for="ascFechaAscenso" class="form-label">Fecha de
+								Ascenso *</label> <input type="date" class="form-control"
+								id="ascFechaAscenso" th:field="*{asc_fecha_ascenso}" required />
+							<div class="invalid-feedback">Seleccione una fecha válida.</div>
+						</div>
 
-                        <!-- OBSERVACION -->
-                        <div class="col-md-12">
-                            <label for="ascObservacion" class="form-label">Observación</label>
-                            <textarea class="form-control" id="ascObservacion" rows="3"
-                                      placeholder="Observaciones del examen / ascenso..."
-                                      th:field="*{asc_observacion}"></textarea>
-                        </div>
+						<!-- CALIFICACION -->
+						<div class="col-md-6">
+							<label for="ascCalificacion" class="form-label">Calificación
+								*</label> <input type="number" class="form-control" id="ascCalificacion"
+								step="0.01" min="0" max="10" placeholder="Ej: 9.50"
+								th:field="*{asc_calificacion}" required />
+							<div class="invalid-feedback">Ingrese una calificación
+								válida (0 a 10).</div>
+						</div>
 
-                        <!-- CERTIFICADO GENERADO -->
-                        <div class="col-md-12">
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="ascCertGenerado"
-                                       th:field="*{asc_c_generado}" />
-                                <label class="form-check-label" for="ascCertGenerado">
-                                    Certificado generado
-                                </label>
-                            </div>
-                        </div>
+						<!-- EVALUADOR -->
+						<div class="col-md-6">
+							<label for="ascEvaluador" class="form-label">Evaluador *</label>
+							<input type="text" class="form-control" id="ascEvaluador"
+								placeholder="Ej: Sensei Carlos" maxlength="100"
+								th:field="*{asc_evaluador}" required />
+							<div class="invalid-feedback">Ingrese el nombre del
+								evaluador.</div>
+						</div>
 
-                    </div>
-                    <!--end::Row-->
-                </div>
-                <!--end::Body-->
+						<!-- OBSERVACION -->
+						<div class="col-md-12">
+							<label for="ascObservacion" class="form-label">Observación</label>
+							<textarea class="form-control" id="ascObservacion" rows="3"
+								placeholder="Observaciones del examen / ascenso..."
+								th:field="*{asc_observacion}"></textarea>
+						</div>
 
-                <!--begin::Footer-->
-                <div class="card-footer">
-                    <button class="btn btn-info" type="submit">Guardar Ascenso</button>
-                    <a th:href="@{/ascensos/listarascensos}" class="btn btn-secondary ms-2">Cancelar</a>
-                </div>
-                <!--end::Footer-->
-            </form>
-            <!--end::Form-->
-        </div>
-    </div>
+						<!-- CERTIFICADO GENERADO -->
+						<div class="col-md-12">
+							<div class="form-check mt-2">
+								<input class="form-check-input" type="checkbox"
+									id="ascCertGenerado" th:field="*{asc_c_generado}" /> <label
+									class="form-check-label" for="ascCertGenerado">
+									Certificado generado </label>
+							</div>
+						</div>
 
-    <!--begin::JavaScript-->
-    <script>
+					</div>
+					<!--end::Row-->
+				</div>
+				<!--end::Body-->
+
+				<!--begin::Footer-->
+				<div class="card-footer">
+					<button class="btn btn-info" type="submit">Guardar Ascenso</button>
+					<a th:href="@{/ascensos/listarascensos}"
+						class="btn btn-secondary ms-2">Cancelar</a>
+				</div>
+				<!--end::Footer-->
+			</form>
+			<!--end::Form-->
+		</div>
+	</div>
+
+	<!--begin::JavaScript-->
+	<script>
         (() => {
             'use strict';
             const forms = document.querySelectorAll('.needs-validation');
@@ -118,6 +135,6 @@
             });
         })();
     </script>
-    <!--end::JavaScript-->
+	<!--end::JavaScript-->
 </body>
 </html>

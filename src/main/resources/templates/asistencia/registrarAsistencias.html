@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/plantilla/plantillaui.html">
 
@@ -27,8 +27,9 @@
                     <thead class="table-dark sticky-top">
                         <tr>
                             <th style="width:50px;">#</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
+                            <th>Alumno</th>
+                            <th>Cedula</th>
+                            
                             <th class="text-center">Asiste</th>
                             <th class="text-center">No asiste</th>
                             <th>Observación</th>
@@ -38,64 +39,18 @@
                     <tbody>
 
                         <!-- FILA 1 -->
-                        <tr>
-                            <td>1</td>
-                            <td>Juan</td>
-                            <td>Pérez</td>
+                        <tr th:each="alumno: ${alumnoModel}">
+                            <td th:text="${alumno.alu_id}"></td>
+                            <td th:text="${alumno.alu_nombre}+' '+ ${alumno.alu_apellido}"></td>
+                            <td th:text="${alumno.alu_cedula}"></td>
 
                             <!-- RADIO ASISTE -->
                             <td class="text-center">
                                 <input type="radio" name="estado1" class="form-check-input">
                             </td>
-
-                            <!-- RADIO NO ASISTE -->
-                            <td class="text-center">
-                                <input type="radio" name="estado1" class="form-check-input">
-                            </td>
-
-                            <!-- OBSERVACIÓN -->
-                            <td>
-                                <input type="text" class="form-control" placeholder="Observación">
-                            </td>
+       
                         </tr>
-
-                        <!-- FILA 2 -->
-                        <tr>
-                            <td>2</td>
-                            <td>Ana</td>
-                            <td>Gómez</td>
-
-                            <td class="text-center">
-                                <input type="radio" name="estado2" class="form-check-input">
-                            </td>
-
-                            <td class="text-center">
-                                <input type="radio" name="estado2" class="form-check-input">
-                            </td>
-
-                            <td>
-                                <input type="text" class="form-control" placeholder="Observación">
-                            </td>
-                        </tr>
-
-                        <!-- FILA 3 -->
-                        <tr>
-                            <td>3</td>
-                            <td>Carlos</td>
-                            <td>Ruiz</td>
-
-                            <td class="text-center">
-                                <input type="radio" name="estado3" class="form-check-input">
-                            </td>
-
-                            <td class="text-center">
-                                <input type="radio" name="estado3" class="form-check-input">
-                            </td>
-
-                            <td>
-                                <input type="text" class="form-control" placeholder="Observación">
-                            </td>
-                        </tr>
+       
 
                         <!-- AGREGA MÁS FILAS SI QUIERES -->
                     </tbody>

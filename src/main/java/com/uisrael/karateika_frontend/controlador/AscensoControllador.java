@@ -1,5 +1,6 @@
 package com.uisrael.karateika_frontend.controlador;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.uisrael.karateika_frontend.modelo.dto.request.AscensoDTORequest;
 import com.uisrael.karateika_frontend.modelo.dto.response.AscensoDTOResponse;
+import com.uisrael.karateika_frontend.modelo.enums.Cinturon;
+import com.uisrael.karateika_frontend.service.IAlumnoServicio;
 import com.uisrael.karateika_frontend.service.IAscensoServicio;
 
 @Controller
@@ -20,6 +23,9 @@ public class AscensoControllador {
 
     @Autowired
     private IAscensoServicio servicioAscenso;
+    
+    @Autowired
+    private IAlumnoServicio alumnoService;
 
     // LISTAR ASCENSOS
     @GetMapping("/listarascensos")
@@ -32,6 +38,9 @@ public class AscensoControllador {
     // FORM NUEVO ASCENSO
     @GetMapping("/nuevoascenso")
     public String nuevoAscenso(Model model) {
+    	model.addAttribute("alumnoModel", alumnoService.listarAlumno());
+		// Añadimos la lista de cinturones desde el enum para poblar el select en la vista
+		model.addAttribute("cinturones", Arrays.asList(Cinturon.values()));
         model.addAttribute("ascenso", new AscensoDTORequest());
         return "/ascenso/nuevoascensos";
     }

@@ -1,96 +1,126 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/plantilla/plantillaui.html">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/plantilla/plantillaui.html">
 
 <head>
-    <title>Consulta de Asistencias</title>
+<title>Consulta de Asistencias</title>
 </head>
 
 <body>
 
-<div layout:fragment="contenidopaginas">
+	<div layout:fragment="contenidopaginas">
 
-    <div class="card mb-4">
+		<div class="card mb-4">
 
-        <div class="card-header">
-            <h3 class="card-title">CONSULTA DE ASISTENCIAS POR CÉDULA</h3>
-        </div>
+			<div class="card-header">
+				<h3 class="card-title">CONSULTA DE ASISTENCIAS POR CÉDULA</h3>
+			</div>
 
-        <div class="card-body">
+			<div class="card-body">
 
-            <!-- BUSCADOR + RESUMEN -->
-            <div class="row mb-4 align-items-end">
+				<!-- BUSCADOR + RESUMEN -->
+				<div class="row mb-4 align-items-end">
 
-                <!-- BUSCAR CÉDULA -->
-                <div class="col-md-4">
-                    <label class="form-label">Buscar por cédula</label>
-                    <input type="text" class="form-control" placeholder="Ingrese la cédula">
-                </div>
+					<!-- BUSCAR CÉDULA -->
+					<div class="col-md-4">
+						<label class="form-label">Buscar por cédula</label> <input
+							type="text" class="form-control" id="buscarCedula"
+							placeholder="Ingrese la cédula">
+					</div>
 
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100">
-                        Buscar
-                    </button>
-                </div>
+					<div class="col-md-2">
+						<button class="btn btn-primary w-100">Buscar</button>
+					</div>
 
-                <!-- RESUMEN -->
-                <div class="col-md-2 text-center">
-                    <label class="form-label">Días Asistencia</label>
-                    <div class="fw-bold text-success fs-5">12</div>
-                </div>
+					<!-- RESUMEN -->
+					<div class="col-md-2 text-center">
+						<label class="form-label">Días Asistencia</label>
+						<div class="fw-bold text-success fs-5">12</div>
+					</div>
 
-                <div class="col-md-2 text-center">
-                    <label class="form-label">Días No Asistencia</label>
-                    <div class="fw-bold text-danger fs-5">3</div>
-                </div>
+					<div class="col-md-2 text-center">
+						<label class="form-label">Días No Asistencia</label>
+						<div class="fw-bold text-danger fs-5">3</div>
+					</div>
 
-                <div class="col-md-2 text-center">
-                    <label class="form-label">Total</label>
-                    <div class="fw-bold fs-5">15</div>
-                </div>
+					<div class="col-md-2 text-center">
+						<label class="form-label">Total</label>
+						<div class="fw-bold fs-5">15</div>
+					</div>
 
-            </div>
+				</div>
 
-            <!-- TABLA -->
-            <div class="table-responsive" style="max-height: 400px; overflow:auto;">
+				<!-- TABLA -->
+				<div class="table-responsive"
+					style="max-height: 400px; overflow: auto;">
 
-                <table class="table table-bordered table-striped table-hover align-middle">
+					<table id="tablaAsistencias"
+						class="table table-bordered table-striped table-hover align-middle">
 
-                    <thead class="table-dark sticky-top">
-                        <tr>
-                            <th style="width:50px;">#</th>
-                            <th class="text-center">Alumno</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Observación</th>
-                        </tr>
-                    </thead>
+						<thead class="table-dark sticky-top">
+							<tr>
+								<th style="width: 50px;">#</th>
+								<th class="text-center">Alumno</th>
+								<th class="text-center">Fecha</th>
+								<th class="text-center">Estado</th>
+								<th class="text-center">Observación</th>
+							</tr>
+						</thead>
 
-                    <tbody>
+						<tbody>
 
-                        <!-- REGISTRO 1 -->
-                        <tr th:each="asistencias: ${asistenciaModel}">
-                            <td th:text="${asistencias.asi_id}"></td>
-                            <td th:text="${asistencias.fkalumno.alu_nombre}+' '+ ${asistencias.fkalumno.alu_apellido}">Juan</td>
-                            <td th:text="${asistencias.asi_fecha}"></td>
-                            <td class="text-center" th:text="${asistencias.asi_estado}">
-                                <span class="badge bg-success"></span>
-                            </td>
-                            <td class="text-center" th:text="${asistencias.asi_observacion}"></td>
-                        </tr>
-            
+							<!-- REGISTRO 1 -->
+							<tr th:each="asistencias: ${asistenciaModel}">
+								<td th:text="${asistencias.asi_id}"></td>
+								<td class="d-none cedula"
+									th:text="${asistencias.fkalumno.alu_cedula}"></td>
+								<td
+									th:text="${asistencias.fkalumno.alu_nombre}+' '+ ${asistencias.fkalumno.alu_apellido}">Juan</td>
+								<td th:text="${asistencias.asi_fecha}"></td>
+								<td class="text-center" th:text="${asistencias.asi_estado}">
+									<span class="badge bg-success"></span>
+								</td>
+								<td class="text-center" th:text="${asistencias.asi_observacion}"></td>
+							</tr>
 
-                    </tbody>
 
-                </table>
+						</tbody>
 
-            </div>
+					</table>
 
-        </div>
-    </div>
+				</div>
+				<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-</div>
+    const buscador = document.getElementById('buscarCedula');
+    const filas = document.querySelectorAll('#tablaAsistencias tbody tr');
+
+    if (!buscador || filas.length === 0) {
+        console.log('Buscador o filas no encontradas');
+        return;
+    }
+
+    buscador.addEventListener('input', function () {
+        const filtro = this.value.trim();
+
+        filas.forEach(fila => {
+            const cedula = fila.querySelector('.cedula')?.textContent || '';
+            fila.style.display = cedula.includes(filtro) ? '' : 'none';
+        });
+    });
+
+});
+</script>
+
+
+			</div>
+		</div>
+
+	</div>
+
+
+
 
 </body>
 </html>

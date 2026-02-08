@@ -15,5 +15,7 @@ public class AscensoDTOResponse {
     private String asc_evaluador;
     private String asc_observacion;
     private boolean asc_c_generado;
+    
+    private AlumnoDTOResponse fkalumno;
 
 }
