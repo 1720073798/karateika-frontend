@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,32 +21,43 @@ import com.uisrael.karateika_frontend.service.IPagosServicio;
 public class PagosControllador {
 
 	@Autowired
-	private IPagosServicio servicioPago;
-	//@Autowired
-	//private IAlumnoServicio servicioAlumno;        
-	@Autowired
-	private IComprobanteServicio servicioComprobante;
-	@GetMapping("/listarpago")
-	public String listarPagos(Model model) {
-	    List<PagosDTOResponse> contenidoBD = servicioPago.listarPagos();
-	    model.addAttribute("listapagos", contenidoBD);
-	    return "/pago/listarpagos";
-	}
+    private IPagosServicio servicioPago;
+    
+    @Autowired
+    private IComprobanteServicio servicioComprobante;
 
-	@GetMapping("/nuevopago")
-	public String nuevoPago(Model model) {
-	    model.addAttribute("pago", new PagosDTORequest());
+    @GetMapping("/listarpago")
+    public String listarPagos(Model model) {
+        List<PagosDTOResponse> contenidoBD = servicioPago.listarPagos();
+        model.addAttribute("listapagos", contenidoBD);
+        return "/pago/listarpagos";
+    }
 
-	   // model.addAttribute("listaAlumnos", servicioAlumno.listarAlumnos());
+    @GetMapping("/nuevopago")
+    public String nuevoPago(Model model) {
+        model.addAttribute("pago", new PagosDTORequest());
+        model.addAttribute("listaComprobantes", servicioComprobante.listarComprobantes());
+        return "/pago/nuevopagos";
+    }
 
-	    model.addAttribute("listaComprobantes", servicioComprobante.listarComprobantes());
-	    
-	    return "/pago/nuevopagos";
-	}
-
-	@PostMapping
-	public String guardarPago(@ModelAttribute PagosDTORequest pago) {
-	    servicioPago.crearPago(pago);
-	    return "redirect:/pagos/listarpago";
-	}
+    // ✅ ÚNICO MÉTODO PARA CREAR Y EDITAR (lógica del profesor)
+    @PostMapping
+    public String guardarPago(@ModelAttribute PagosDTORequest pago) {
+        servicioPago.guardarPago(pago);
+        return "redirect:/pagos/listarpago";
+    }
+    
+    @GetMapping("/editar/{id}")
+    public String editarPago(@PathVariable int id, Model model) {
+        PagosDTOResponse pago = servicioPago.buscarPorId(id);
+        model.addAttribute("pago", pago);
+        model.addAttribute("listaComprobantes", servicioComprobante.listarComprobantes());
+        return "/pago/nuevopagos"; // ✅ MISMO FORMULARIO QUE NUEVO
+    }
+    
+    @GetMapping("/eliminar/{id}")
+    public String eliminarPago(@PathVariable int id) {
+        servicioPago.eliminarPago(id);
+        return "redirect:/pagos/listarpago";
+    }
 }
