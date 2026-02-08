@@ -23,15 +23,19 @@ public class PagosServicioImpl implements IPagosServicio {
 		return clienteWeb.get().uri("/pagos").retrieve().bodyToFlux(PagosDTOResponse.class).collectList().block();
 	}
 
+	// ✅ ÚNICO MÉTODO PARA CREAR Y EDITAR (lógica del profesor)
 	@Override
-	public void crearPago(PagosDTORequest dto) {
+	public void guardarPago(PagosDTORequest dto) {
 		clienteWeb.post().uri("/pagos").bodyValue(dto).retrieve().toBodilessEntity().block();
 	}
 
 	@Override
 	public PagosDTOResponse buscarPorId(int id) {
-		
-		return null;
+		return clienteWeb.get().uri("/pagos/buscarid/{id}", id).retrieve().bodyToMono(PagosDTOResponse.class).block();
 	}
 
+	@Override
+	public void eliminarPago(int id) {
+		clienteWeb.delete().uri("/pagos/{id}", id).retrieve().toBodilessEntity().block();
+	}
 }

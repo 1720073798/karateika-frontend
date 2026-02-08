@@ -7,9 +7,8 @@ import com.uisrael.karateika_frontend.modelo.dto.response.PagosDTOResponse;
 
 public interface IPagosServicio {
 
-	public List<PagosDTOResponse> listarPagos();
-
-	public void crearPago(PagosDTORequest dto);
-
-	public PagosDTOResponse buscarPorId(int id);
+	List<PagosDTOResponse> listarPagos();
+    void guardarPago(PagosDTORequest dto); // ✅ Único método
+    PagosDTOResponse buscarPorId(int id);
+    void eliminarPago(int id);
 }

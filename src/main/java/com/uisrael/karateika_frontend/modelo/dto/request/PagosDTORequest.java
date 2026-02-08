@@ -3,19 +3,15 @@ package com.uisrael.karateika_frontend.modelo.dto.request;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
 @Data
 public class PagosDTORequest {
-
 	
 	private int pag_id;
-
-	private int pag_mes;
-	
-	private int pag_anio;
-	
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
 	private LocalDate pag_fecha_pago;
 	
 	private String pag_metodo_pago;
@@ -27,10 +23,10 @@ public class PagosDTORequest {
 	private BigDecimal pag_monto;
 	
 	private String pag_registrado_por;
-	
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
 	private LocalDate pag_fecha_registro;
 	
-	private AlumnoDTORequest fkalumno; 
-	private ComprobanteDTORequest fkcomprobante; 
+	private AlumnoDTORequest fkalumno;
+	private ComprobanteDTORequest fkcomprobante;
 	
 }

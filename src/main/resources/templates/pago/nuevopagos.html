@@ -1,160 +1,146 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/plantilla/plantillaui.html">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="/plantilla/plantillaui.html">
 <head>
-<title>Nuevo Pago</title>
+    <title>Nuevo Pago</title>
 </head>
 <body>
-	<div layout:fragment="contenidopaginas">
-		<div class="card card-success card-outline mb-4">
-			<!--begin::Header-->
-			<div class="card-header">
-				<div class="card-title">REGISTRAR NUEVO PAGO</div>
-			</div>
-			<!--end::Header-->
-			<!--begin::Form-->
-			<form class="needs-validation" novalidate th:action="@{/pagos}"
-				th:object="${pago}" method="post">
-				<!--begin::Body-->
-				<div class="card-body">
-					<!--begin::Row-->
-					<div class="row g-3">
-						<!--begin::Col (Alumno)-->
-						<div class="col-md-6">
-							<label for="fkalumno" class="form-label">Alumno *</label>
-							<!-- En lugar de th:field="*{fkalumno.alu_id}" -->
-							<select class="form-select" name="aluId" id="fkalumno" required>
-								<option selected disabled value="">Seleccione un
-									alumno...</option>
-								<option th:each="alumno : ${listaAlumnos}"
-									th:value="${alumno.alu_id}"
-									th:text="${alumno.alu_nombre + ' ' + alumno.alu_apellido}">
-								</option>
-							</select>
-							<div class="invalid-feedback">Seleccione un alumno.</div>
-						</div>
-						<!--end::Col-->
+<div layout:fragment="contenidopaginas">
+    <div class="card card-success card-outline mb-4">
+        <div class="card-header">
+            <div class="card-title">REGISTRAR NUEVO PAGO</div>
+        </div>
+        
+        <form class="needs-validation" novalidate 
+              th:action="@{/pagos}" 
+              th:object="${pago}" 
+              method="post">
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Alumno -->
+                    <div class="col-md-6">
+                        <label for="fkalumno" class="form-label">Alumno <span class="text-danger">*</span></label>
+                        <select class="form-select" name="aluId" id="fkalumno" required>
+                            <option selected disabled value="0">Seleccione un alumno...</option>
+                            <option th:each="alumno : ${listaAlumnos}"
+                                    th:value="${alumno.alu_id}" 
+                                    th:text="${alumno.alu_nombre + ' ' + alumno.alu_apellido}">
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">Seleccione un alumno.</div>
+                    </div>
+                    
+                    <!-- Comprobante (dropdown) -->
+                    <div class="col-md-6">
+                        <label for="fkcomprobante" class="form-label">Comprobante <span class="text-danger">*</span></label>
+                        <select class="form-select" name="comId" id="fkcomprobante" required>
+                            <option selected disabled value="0">Seleccione un comprobante...</option>
+                            <option th:each="comprobante : ${listaComprobantes}"
+                                    th:value="${comprobante.com_id}" 
+                                    th:text="${comprobante.com_numero}">
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">Seleccione un comprobante válido.</div>
+                    </div>
 
-						<!--begin::Col (Comprobante)-->
-						<div class="col-md-6">
-							<label for="fkcomprobante" class="form-label">Comprobante
-								*</label> <select class="form-select" name="comId" id="fkcomprobante"
-								required>
-								<option selected disabled value="">Seleccione un
-									comprobante...</option>
-								<option th:each="comprobante : ${listaComprobantes}"
-									th:value="${comprobante.com_id}"
-									th:text="${comprobante.com_nombre}"></option>
-							</select>
-							<div class="invalid-feedback">Seleccione un comprobante.</div>
-						</div>
-						<!--end::Col-->
+                    <!-- Fecha de Pago -->
+                    <div class="col-md-4">
+                        <label for="pagFechaPago" class="form-label">Fecha de Pago <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="pagFechaPago"
+                               th:field="*{pag_fecha_pago}" required/>
+                        <div class="invalid-feedback">Seleccione una fecha.</div>
+                    </div>
 
-						<!-- Mes y Año -->
-						<div class="col-md-4">
-							<label for="pagMes" class="form-label">Mes *</label> <input
-								type="number" class="form-control" id="pagMes" min="1" max="12"
-								th:field="*{pag_mes}" required />
-							<div class="invalid-feedback">Ingrese mes válido (1-12).</div>
-						</div>
-						<div class="col-md-4">
-							<label for="pagAnio" class="form-label">Año *</label> <input
-								type="number" class="form-control" id="pagAnio" min="2000"
-								max="2100" th:field="*{pag_anio}" required />
-							<div class="invalid-feedback">Ingrese año válido.</div>
-						</div>
+                    <!-- Método de Pago -->
+                    <div class="col-md-4">
+                        <label for="pagMetodoPago" class="form-label">Método de Pago <span class="text-danger">*</span></label>
+                        <select class="form-select" id="pagMetodoPago"
+                                th:field="*{pag_metodo_pago}" required>
+                            <option selected disabled value="">Elija...</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                            <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                            <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                        <div class="invalid-feedback">Seleccione un método.</div>
+                    </div>
 
-						<!-- Fecha de Pago -->
-						<div class="col-md-4">
-							<label for="pagFechaPago" class="form-label">Fecha de
-								Pago *</label> <input type="date" class="form-control" id="pagFechaPago"
-								th:field="*{pag_fecha_pago}" required />
-							<div class="invalid-feedback">Seleccione una fecha.</div>
-						</div>
+                    <!-- Monto -->
+                    <div class="col-md-4">
+                        <label for="pagMonto" class="form-label">Monto <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" step="0.01" class="form-control" id="pagMonto"
+                                   th:field="*{pag_monto}" required/>
+                        </div>
+                        <div class="invalid-feedback">Ingrese un monto válido.</div>
+                    </div>
 
-						<!-- Método de Pago -->
-						<div class="col-md-6">
-							<label for="pagMetodoPago" class="form-label">Método de
-								Pago *</label> <select class="form-select" id="pagMetodoPago"
-								th:field="*{pag_metodo_pago}" required>
-								<option selected disabled value="">Elija...</option>
-								<option value="Efectivo">Efectivo</option>
-								<option value="Transferencia Bancaria">Transferencia
-									Bancaria</option>
-								<option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-								<option value="Tarjeta de Débito">Tarjeta de Débito</option>
-								<option value="Otro">Otro</option>
-							</select>
-							<div class="invalid-feedback">Seleccione un método.</div>
-						</div>
+                    <!-- Número de Recibo -->
+                    <div class="col-md-6">
+                        <label for="pagNumeroRecibo" class="form-label">Número de Recibo</label>
+                        <input type="text" class="form-control" id="pagNumeroRecibo" maxlength="20"
+                               th:field="*{pag_numero_recibo}"/>
+                    </div>
 
-						<!-- Número de Recibo -->
-						<div class="col-md-6">
-							<label for="pagNumeroRecibo" class="form-label">Número de
-								Recibo</label> <input type="text" class="form-control"
-								id="pagNumeroRecibo" maxlength="20"
-								th:field="*{pag_numero_recibo}" />
-						</div>
+                    <!-- Registrado por -->
+                    <div class="col-md-6">
+                        <label for="pagRegistradoPor" class="form-label">Registrado por <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="pagRegistradoPor" 
+                               th:field="*{pag_registrado_por}" required/>
+                        <div class="invalid-feedback">Ingrese quien registró.</div>
+                    </div>
 
-						<!-- Monto -->
-						<div class="col-md-6">
-							<label for="pagMonto" class="form-label">Monto *</label>
-							<div class="input-group">
-								<span class="input-group-text">$</span> <input type="number"
-									step="0.01" class="form-control" id="pagMonto"
-									th:field="*{pag_monto}" required />
-							</div>
-							<div class="invalid-feedback">Ingrese un monto válido.</div>
-						</div>
+                    <!-- Fecha de Registro (automática) -->
+                    <div class="col-md-6">
+                        <label for="pagFechaRegistro" class="form-label">Fecha de Registro <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="pagFechaRegistro"
+                               th:field="*{pag_fecha_registro}" 
+                               value="" required readonly/>
+                        <small class="text-muted">Se establecerá automáticamente con la fecha actual</small>
+                    </div>
 
-						<!-- Registrado por -->
-						<div class="col-md-6">
-							<label for="pagRegistradoPor" class="form-label">Registrado
-								por *</label> <input type="text" class="form-control"
-								id="pagRegistradoPor" th:field="*{pag_registrado_por}" required />
-							<div class="invalid-feedback">Ingrese quien registró.</div>
-						</div>
+                    <!-- Observación -->
+                    <div class="col-12">
+                        <label for="pagObservacion" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="pagObservacion" rows="3" 
+                                  placeholder="Ej: Pago adelantado, descuento aplicado..."
+                                  th:field="*{pag_observacion}"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <button class="btn btn-success" type="submit">Registrar Pago</button>
+                <a th:href="@{/pagos/listarpago}" class="btn btn-secondary ms-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
 
-						<!-- Observación -->
-						<div class="col-12">
-							<label for="pagObservacion" class="form-label">Observaciones</label>
-							<textarea class="form-control" id="pagObservacion" rows="3"
-								placeholder="Ej: Pago adelantado, descuento aplicado..."
-								th:field="*{pag_observacion}"></textarea>
-						</div>
-					</div>
-					<!--end::Row-->
-				</div>
-				<!--end::Body-->
-				<!--begin::Footer-->
-				<div class="card-footer">
-					<button class="btn btn-success" type="submit">Registrar
-						Pago</button>
-					<a th:href="@{/pagos/listarpago}" class="btn btn-secondary ms-2">Cancelar</a>
-				</div>
-				<!--end::Footer-->
-			</form>
-			<!--end::Form-->
-		</div>
-	</div>
+<script>
+// Establecer fecha de registro automáticamente
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('pagFechaRegistro').value = today;
+});
 
-	<!--begin::JavaScript-->
-	<script>
-        (() => {
-            'use strict';
-            const forms = document.querySelectorAll('.needs-validation');
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        })();
-    </script>
-	<!--end::JavaScript-->
+// Validación del formulario
+(() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+</script>
 </body>
 </html>
