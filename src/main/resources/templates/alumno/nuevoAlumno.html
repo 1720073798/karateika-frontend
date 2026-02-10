@@ -27,6 +27,9 @@
 						th:text="${fechaError}"></div>
 					<!--begin::Row-->
 					<div class="row g-3">
+					
+							<input type="hidden" class="form-control" id="txtidAlumno"
+								th:field="*{alu_id}"/>
 
 						<!-- Nombres (ejemplo) -->
 						<div class="col-md-6">
@@ -38,8 +41,8 @@
 						<!-- Apellidos (ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Apellidos:*</label>
-							<input type="text" class="form-control" id="txtapellidoalumno" required
-								th:field="*{alu_apellido}" />
+							<input type="text" class="form-control" id="txtapellidoalumno"
+								required th:field="*{alu_apellido}" />
 						</div>
 
 						<!-- cedeula (ejemplo) -->
@@ -60,14 +63,15 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Email:*</label>
 							<input type="email" class="form-control" id="txtemailalumno"
-								th:field="*{alu_email}" placeholder="correo@ejemplo.com" required/>
+								th:field="*{alu_email}" placeholder="correo@ejemplo.com"
+								required />
 						</div>
 
 						<!--  direccion(ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Domicilio:*</label>
 							<input type="text" class="form-control" id="txtdireccionalumno"
-								th:field="*{alu_direccion}" required/>
+								th:field="*{alu_direccion}" required />
 						</div>
 
 						<!--  telefono(ejemplo) -->
@@ -82,7 +86,7 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Fecha
 								de Nacimiento:*</label> <input type="date" class="form-control"
-								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" required/>
+								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" required />
 
 						</div>
 
@@ -99,24 +103,28 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Nombre
 								de Representante:</label> <input type="text" class="form-control"
-								id="txtnacimientolumno" th:field="*{alu_nombre_representante}" />
+								id="txtNombreRepresentante" th:field="*{alu_nombre_representante}" />
 						</div>
 
 						<!--  telefono representante(ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Telefono
 								de Representante:</label> <input type="text" class="form-control"
-								id="txtnacimientolumno" 
-								th:field="*{alu_telefono_representante}" />
+								id="txtTelefonoRepresentante" th:field="*{alu_telefono_representante}" />
 						</div>
 
+						<!-- Mensaje de error del representante (server-side) -->
+						<div class="col-12">
+							<div th:if="${representanteError}" class="invalid-feedback d-block"
+								th:text="${representanteError}"></div>
+						</div>
 
 						<!--  nombre representante(ejemplo) -->
 
 						<!-- Cinturon de ingreso -->
 						<div class="col-md-6">
-							<label for="cbcinturoningreso" class="form-label">Cinturón
-								de Ingreso:*</label> <select class="form-select" id="cbcinturoningreso"
+							<label for="cmbCinturonIngreso" class="form-label">Cinturón
+								de Ingreso:*</label> <select class="form-select" id="cmbCinturonIngreso"
 								th:field="*{alu_cinturon_ingreso}" required>
 
 								<option value="">Seleccione...</option>
@@ -130,8 +138,8 @@
 
 						<!-- Cinturon de ingreso -->
 						<div class="col-md-6">
-							<label for="cbcinturoningreso" class="form-label">Cinturón
-								Actual:*</label> <select class="form-select" id="cbcinturoningreso"
+							<label for="cmbCinturonActual" class="form-label">Cinturón
+								Actual:*</label> <select class="form-select" id="cmbCinturonActual"
 								th:field="*{alu_cinturon_actual}" required>
 
 								<option value="">Seleccione...</option>
@@ -144,12 +152,17 @@
 						</div>
 
 						<div class="col-md-6 form-check mt-4">
-							<input type="checkbox" class="form-check-input" id="estado" th:field="*{alu_estado}"
-								value="A" required> 
-								<label class="form-check-label" for="estado"> Activo </label>
+							<input type="checkbox" class="form-check-input" id="estado"
+								th:field="*{alu_estado}" value="A" required> <label
+								class="form-check-label" for="estado"> Activo </label>
 						</div>
 					</div>
 					<!--end::Row-->
+
+					<!-- Feedback para validación de cinturones -->
+					<div class="col-12">
+						<div id="cinturonFeedback" class="invalid-feedback d-block" style="display: none"></div>
+					</div>
 				</div>
 				<!--end::Body-->
 
@@ -197,6 +210,8 @@
 						} else {
 							this.setCustomValidity('');
 						}
+						// actualizar estado de campos representante al cambiar fecha
+						actualizarRepresentante();
 					});
 				}
 
@@ -216,6 +231,49 @@
 					});
 				}
 
+				// Campos representante
+				const repNombre = document.getElementById('txtNombreRepresentante');
+				const repTelefono = document.getElementById('txtTelefonoRepresentante');
+
+				function calcularEdadDesdeFecha(valorFecha) {
+					if (!valorFecha) return null;
+					const partes = valorFecha.split('-');
+					if (partes.length !== 3) return null;
+					const año = parseInt(partes[0], 10);
+					const mes = parseInt(partes[1], 10) - 1;
+					const dia = parseInt(partes[2], 10);
+					const fechaNac = new Date(año, mes, dia);
+					const hoy = new Date();
+					let edad = hoy.getFullYear() - fechaNac.getFullYear();
+					const m = hoy.getMonth() - fechaNac.getMonth();
+					if (m < 0 || (m === 0 && hoy.getDate() < fechaNac.getDate())) {
+						edad--;
+					}
+					return edad;
+				}
+
+				function actualizarRepresentante() {
+					const edad = fechaInput ? calcularEdadDesdeFecha(fechaInput.value) : null;
+					if (edad === null) {
+						// Si no hay fecha, dejamos campos activos (servidor validará si es obligatorio)
+						if (repNombre) { repNombre.disabled = false; repNombre.required = true; }
+						if (repTelefono) { repTelefono.disabled = false; repTelefono.required = true; }
+						return;
+					}
+					if (edad >= 18) {
+						// No necesita representante: deshabilitar y limpiar
+						if (repNombre) { repNombre.value = ''; repNombre.classList.remove('is-invalid'); repNombre.disabled = true; repNombre.required = false; }
+						if (repTelefono) { repTelefono.value = ''; repTelefono.classList.remove('is-invalid'); repTelefono.disabled = true; repTelefono.required = false; }
+					} else {
+						// Menor de 18: habilitar y marcar obligatorio
+						if (repNombre) { repNombre.disabled = false; repNombre.required = true; }
+						if (repTelefono) { repTelefono.disabled = false; repTelefono.required = true; }
+					}
+				}
+
+				// Ejecutar en carga para casos de edición
+				actualizarRepresentante();
+
 				// Validación de cédula en tiempo real (cliente) consultando la API
 				const cedulaInput = document.getElementById('txtcedeulaalumno');
 				const cedulaFeedback = document.getElementById('cedulaFeedback');
@@ -226,7 +284,14 @@
 						const resp = await fetch('/api/alumnos');
 						if (!resp.ok) return [];
 						const data = await resp.json();
-						cedulasExistentes = data.map(a => a.alu_cedula ? a.alu_cedula.trim().toLowerCase() : null).filter(Boolean);
+						// Obtener la cédula actual del formulario (si existe) para excluirla
+						const cedulaActual = (document.getElementById('txtcedeulaalumno') && document.getElementById('txtidAlumno'))
+							? (document.getElementById('txtcedeulaalumno').value || '').trim().toLowerCase()
+							: '';
+						cedulasExistentes = data.map(a => a.alu_cedula ? a.alu_cedula.trim().toLowerCase() : null)
+							.filter(Boolean)
+							// Excluir la cédula actual del formulario para permitir editar sin cambiarla
+							.filter(c => c !== cedulaActual);
 						return cedulasExistentes;
 					} catch (e) {
 						console.error('No se pudo cargar cedulas', e);
@@ -254,22 +319,39 @@
 					});
 				}
 
-				// Validación de formulario (Bootstrap-like)
+				// Validación de formulario (Bootstrap-like) - único handler consolidado
 				const forms = document.querySelectorAll('.needs-validation');
 				Array.from(forms).forEach(function (form) {
 					form.addEventListener('submit', function (event) {
-						// comprueba fechaNacimiento antes de checkValidity para mostrar mensaje adecuado
+						// Asegurar que las restricciones de cinturones estén actualizadas antes de validar
+						ajustarOpcionesCinturon();
+						// Limpiar posibles mensajes previos
+						if (fechaInput) fechaInput.setCustomValidity('');
+						if (fechaIngresoInput) fechaIngresoInput.setCustomValidity('');
+						if (cedulaInput) cedulaInput.setCustomValidity('');
+						// Reaplicar validaciones personalizadas de fecha si es necesario
 						if (fechaInput && fechaInput.value && fechaInput.value > fechaInput.max) {
 							fechaInput.setCustomValidity('El alumno debe tener al menos 4 años.');
 						}
-						// comprueba fechaIngreso para no permitir fechas posteriores a hoy
 						if (fechaIngresoInput && fechaIngresoInput.value && fechaIngresoInput.value > fechaIngresoInput.max) {
 							fechaIngresoInput.setCustomValidity('No se permiten fechas posteriores a la fecha actual.');
 						}
-						// comprueba cédula cliente
+						// Validación de cédula (marcada por el listener de input)
 						if (cedulaInput && cedulaInput.value && cedulaInput.classList.contains('is-invalid')) {
 							cedulaInput.setCustomValidity('Usuario ya está registrado');
 						}
+						// Si la validación del select de cinturones puso un mensaje, evitar submit
+						const cinturonFeedback = document.getElementById('cinturonFeedback');
+						if (selCinturonActual && selCinturonActual.validationMessage) {
+							if (cinturonFeedback) { cinturonFeedback.style.display = 'block'; }
+							event.preventDefault();
+							event.stopPropagation();
+							form.classList.add('was-validated');
+							return;
+						} else if (cinturonFeedback) {
+							cinturonFeedback.style.display = 'none';
+						}
+						// Validación estándar
 						if (!form.checkValidity()) {
 							event.preventDefault();
 							event.stopPropagation();
@@ -277,6 +359,43 @@
 						form.classList.add('was-validated');
 					}, false);
 				});
+
+				// Lógica para limitar las opciones de "Cinturón Actual" en función de "Cinturón de Ingreso"
+				const selCinturonIngreso = document.getElementById('cmbCinturonIngreso');
+				const selCinturonActual = document.getElementById('cmbCinturonActual');
+
+				function ajustarOpcionesCinturon() {
+					if (!selCinturonIngreso || !selCinturonActual) return;
+					// Construir el orden de cinturones a partir del select de ingreso (se asume que ambos tienen las mismas opciones en el mismo orden)
+					const orden = Array.from(selCinturonIngreso.options).map(o => o.value).filter(v => v !== '');
+					const ingresoValor = selCinturonIngreso.value;
+					const ingresoPos = orden.indexOf(ingresoValor);
+					for (let i = 0; i < selCinturonActual.options.length; i++) {
+						const opt = selCinturonActual.options[i];
+						if (!opt.value) {
+							// opción vacía (Seleccione...) siempre habilitada
+							opt.disabled = false;
+							continue;
+						}
+						const pos = orden.indexOf(opt.value);
+						if (ingresoPos === -1) {
+							// si no hay selección de ingreso, habilitar todo
+							opt.disabled = false;
+						} else {
+							// habilitar solo las opciones cuyo nivel sea >= ingresoPos
+							opt.disabled = (pos < ingresoPos);
+						}
+					}
+				}
+
+				if (selCinturonIngreso) {
+					selCinturonIngreso.addEventListener('change', ajustarOpcionesCinturon);
+				}
+				if (selCinturonActual) {
+					selCinturonActual.addEventListener('change', ajustarOpcionesCinturon);
+				}
+				// Ejecutar en carga (edición) para aplicar restricciones iniciales
+				ajustarOpcionesCinturon();
 			})();
 			</script>
 			<!--end::JavaScript-->

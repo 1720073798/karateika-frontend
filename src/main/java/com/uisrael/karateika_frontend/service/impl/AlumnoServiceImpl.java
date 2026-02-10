@@ -29,9 +29,8 @@ public class AlumnoServiceImpl implements IAlumnoServicio{
 	}
 
 	@Override
-	public AlumnoDTOResponse buscarPorId(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public AlumnoDTOResponse buscarPorId(int idAlumno) {
+		return clienteWeb.get().uri(uriBuilder -> uriBuilder.path("/alumnos/buscarid/{idAlumno}").build(idAlumno)).retrieve().bodyToMono(AlumnoDTOResponse.class).block();
 	}
 
 }

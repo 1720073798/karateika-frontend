@@ -11,6 +11,8 @@ public interface IAsistenciaService {
     public void crearAsistencia(AsistenciaDTORequest dto);
 
     public AsistenciaDTOResponse buscarPorId(int id);
+    
+    public void guardarAsistencias(List<AsistenciaDTORequest> asistencias);
  
 
 }

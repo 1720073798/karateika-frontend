@@ -2,6 +2,8 @@ package com.uisrael.karateika_frontend.service.impl;
 
 import java.util.List;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -32,5 +34,18 @@ public class AscensoServicioImpl implements IAscensoServicio {
 	public AscensoDTOResponse buscarPorId(int id) {
 		// Se puede implementar luego si lo necesitas
 		return null;
+	}
+
+	@Override
+	public byte[] crearAscensoYDescargarCertificado(AscensoDTORequest dto) {
+		// Llamamos al endpoint que puede devolver PDF
+		return clienteWeb.post()
+				.uri("/ascensos/certificado")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_PDF)
+				.bodyValue(dto)
+				.retrieve()
+				.bodyToMono(byte[].class)
+				.block();
 	}
 }

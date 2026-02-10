@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -48,7 +49,10 @@ public class AlumnoControllador {
 			String cedula = alumno.getAlu_cedula().trim();
 			List<AlumnoDTOResponse> existentes = servicioAlumno.listarAlumno();
 			boolean existe = existentes != null && existentes.stream()
-				.anyMatch(a -> a.getAlu_cedula() != null && a.getAlu_cedula().trim().equalsIgnoreCase(cedula));
+				// Si estamos editando (alu_id > 0) debemos excluir al propio registro de la comprobación
+				.anyMatch(a -> a.getAlu_cedula() != null && a.getAlu_cedula().trim().equalsIgnoreCase(cedula)
+					// permitir que coincida con el mismo id cuando se edita
+					&& a.getAlu_id() != alumno.getAlu_id());
 			if (existe) {
 				model.addAttribute("modelAlumno", alumno);
 				model.addAttribute("cinturones", Arrays.asList(Cinturon.values()));
@@ -69,6 +73,21 @@ public class AlumnoControllador {
 				model.addAttribute("fechaError", "La fecha de nacimiento debe indicar al menos 4 años de edad.");
 				return "/alumno/nuevoAlumno";
 			}
+			// Nueva validación: si es menor de 18 años, representante es obligatorio
+			if (edad < 18) {
+				boolean faltaNombre = alumno.getAlu_nombre_representante() == null || alumno.getAlu_nombre_representante().trim().isEmpty();
+				boolean faltaTelefono = alumno.getAlu_telefono_representante() == null || alumno.getAlu_telefono_representante().trim().isEmpty();
+				if (faltaNombre || faltaTelefono) {
+					model.addAttribute("modelAlumno", alumno);
+					model.addAttribute("cinturones", Arrays.asList(Cinturon.values()));
+					model.addAttribute("representanteError", "Para menores de 18 años el nombre y teléfono del representante son obligatorios.");
+					return "/alumno/nuevoAlumno";
+				}
+			} else {
+				// Si tiene 18 o más, limpiamos datos de representante (no son requeridos)
+				alumno.setAlu_nombre_representante(null);
+				alumno.setAlu_telefono_representante(null);
+			}
 		}
 		// Validación: la fecha de ingreso no puede ser posterior a hoy (no la forzamos, solo la rechazamos)
 		if (alumno.getAlu_fecha_ingreso() != null) {
@@ -88,4 +107,11 @@ public class AlumnoControllador {
 		servicioAlumno.crearAlumno(alumno);
 		return "redirect:/alumnos";
 	}
+	@GetMapping("buscar/{idAlumno}")
+	public String editarAlumno(@PathVariable int idAlumno , Model model) {
+		model.addAttribute("cinturones", Arrays.asList(Cinturon.values())); //lista de cinturones
+		model.addAttribute("modelAlumno", servicioAlumno.buscarPorId(idAlumno)); //buscar por id //enviar el objeto encontrado		
+		return "alumno/nuevoAlumno";  //abrir formulario nuevo curso
+	}
+	
 }

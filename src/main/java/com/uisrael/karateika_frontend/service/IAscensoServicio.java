@@ -12,4 +12,7 @@ public interface IAscensoServicio {
     public void crearAscenso(AscensoDTORequest dto);
 
     public AscensoDTOResponse buscarPorId(int id);
+
+    // Nuevo: crear ascenso y recibir los bytes del certificado si fue generado
+    public byte[] crearAscensoYDescargarCertificado(AscensoDTORequest dto);
 }

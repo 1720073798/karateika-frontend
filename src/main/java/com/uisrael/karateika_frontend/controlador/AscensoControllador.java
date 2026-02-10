@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +50,21 @@ public class AscensoControllador {
 
     // GUARDAR ASCENSO
     @PostMapping
-    public String guardarAscenso(@ModelAttribute AscensoDTORequest ascenso) {
+    public Object guardarAscenso(@ModelAttribute AscensoDTORequest ascenso) {
+        // Si el checkbox de certificado está marcado, llamamos al endpoint que devuelve PDF
+        if (ascenso.isAsc_c_generado()) {
+            byte[] pdf = servicioAscenso.crearAscensoYDescargarCertificado(ascenso);
+            if (pdf != null && pdf.length > 0) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.setContentDispositionFormData("attachment", "certificado_ascenso.pdf");
+                return ResponseEntity.ok().headers(headers).body(pdf);
+            }
+            // Si algo salió mal, redirigimos y mostramos la lista (podrías mejorar mostrando un mensaje)
+            return "redirect:/ascensos/listarascensos";
+        }
+
+        // Si no se pidió certificado, sólo guardamos y redirigimos
         servicioAscenso.crearAscenso(ascenso);
         return "redirect:/ascensos/listarascensos";
     }

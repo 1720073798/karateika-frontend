@@ -36,4 +36,11 @@ public class AsistenciaServiceImpl implements IAsistenciaService{
 		return null;
 	}
 
+	@Override
+	public void guardarAsistencias(List<AsistenciaDTORequest> asistencias) {
+		clienteWeb.post().uri("/asistencias/batch").bodyValue(asistencias).retrieve().toBodilessEntity().block();	
+	}
+
+	
+
 }
