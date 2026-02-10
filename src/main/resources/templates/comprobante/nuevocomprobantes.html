@@ -1,144 +1,223 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/plantilla/plantillaui.html">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui.html">
 <head>
-<title>Comprobante</title>
+    <title>Comprobante</title>
 </head>
 <body>
-	<div layout:fragment="contenidopaginas">
-		<div class="card card-info card-outline mb-4">
-			<div class="card-header">
-				<div class="card-title">
-					<i class="bi bi-file-earmark-plus"></i> <span
-						th:text="${comprobante.com_id == 0 ? 'NUEVO COMPROBANTE' : 'EDITAR COMPROBANTE'}"></span>
-				</div>
-			</div>
+<div layout:fragment="contenidopaginas">
 
-			<form class="needs-validation" novalidate
-				th:action="@{/comprobantes}" th:object="${comprobante}"
-				method="post" enctype="multipart/form-data">
-				<div class="card-body">
-					<!-- ID oculto para saber si es edición -->
-					<input type="hidden" th:field="*{com_id}" />
+    <div class="card card-info card-outline mb-4">
+        <!--begin::Header-->
+        <div class="card-header">
+            <div class="card-title">INGRESAR NUEVO COMPROBANTE</div>
+        </div>
+        <!--end::Header-->
 
-					<div class="row g-3">
-						<!-- Número de Comprobante -->
-						<div class="col-md-6">
-							<label for="comNumero" class="form-label"> <i
-								class="bi bi-hash"></i> Número de Comprobante <span
-								class="text-danger">*</span>
-							</label> <input type="number" class="form-control" id="comNumero"
-								th:field="*{com_numero}" min="1" required />
-							<div class="invalid-feedback">Por favor ingrese un número
-								de comprobante válido</div>
-							<small class="text-muted">Ejemplo: 2026001, 2026002</small>
-						</div>
+        <!--begin::Form-->
+        <form th:action="@{/comprobantes}" th:object="${comprobante}"
+              method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+            <!--begin::Body-->
+            <div class="card-body">
+                <!-- Mensaje de error general del servidor -->
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-						<!-- Fecha de Subida -->
-						<div class="col-md-6">
-							<label for="comFechaSubida" class="form-label"> <i
-								class="bi bi-calendar"></i> Fecha de Subida <span
-								class="text-danger">*</span>
-							</label> <input type="date" class="form-control" id="comFechaSubida"
-								th:field="*{com_fecha_subida}" required />
-							<div class="invalid-feedback">Por favor seleccione una
-								fecha válida</div>
-						</div>
+                <!-- ID oculto -->
+                <input type="hidden" class="form-control" id="txtidComprobante"
+                       th:field="*{com_id}" />
 
-						<!-- Archivo Adjunto -->
-						<div class="col-12">
-							<label for="archivo" class="form-label"> <i
-								class="bi bi-paperclip"></i> Archivo Adjunto (PDF o Imagen)
-							</label> <input type="file" class="form-control" id="archivo"
-								name="archivo" accept=".pdf,.jpg,.jpeg,.png,.gif"
-								onchange="validarArchivo(this)" />
-							<div class="form-text">
-								<i class="bi bi-info-circle"></i> Formatos permitidos: PDF, JPG,
-								PNG. Tamaño máximo: 5MB
-							</div>
-							<div id="archivoError" class="text-danger mt-1"
-								style="display: none;"></div>
+                <!--begin::Row-->
+                <div class="row g-3">
+                    <!-- Número de Comprobante -->
+                    <div class="col-md-6">
+                        <label for="comNumero" class="form-label">Número de Comprobante <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="comNumero"
+                               th:field="*{com_numero}" min="1" required />
+                        <div id="numeroFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor ingrese un número válido (mayor a 0)
+                        </div>
+                    </div>
 
-							<!-- Mostrar archivo actual si es edición -->
-							<div
-								th:if="${comprobante.com_id != 0 && comprobante.com_ruta_archivo != null && !comprobante.com_ruta_archivo.isEmpty()}"
-								class="mt-2">
-								<small class="text-muted"> <i class="bi bi-file-earmark"></i>
-									Archivo actual: <span th:text="${comprobante.com_ruta_archivo}"></span>
-									(déjalo en blanco para mantenerlo)
-								</small>
-							</div>
-						</div>
-					</div>
-				</div>
+                    <!-- Fecha de Subida -->
+                    <div class="col-md-6">
+                        <label for="comFechaSubida" class="form-label">Fecha de Subida <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="comFechaSubida"
+                               th:field="*{com_fecha_subida}" required />
+                        <div id="fechaFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor seleccione una fecha válida
+                        </div>
+                    </div>
 
-				<div class="card-footer">
-					<button class="btn btn-info" type="submit">
-						<i class="bi bi-save"></i> <span
-							th:text="${comprobante.com_id == 0 ? 'Guardar Comprobante' : 'Actualizar Comprobante'}"></span>
-					</button>
-					<a th:href="@{/comprobantes/listarcomprobante}"
-						class="btn btn-secondary ms-2"> <i class="bi bi-x"></i>
-						Cancelar
-					</a>
-				</div>
-			</form>
-		</div>
-	</div>
+                    <!-- Archivo Adjunto -->
+                    <div class="col-12">
+                        <label for="archivo" class="form-label">Archivo Adjunto (PDF o Imagen)</label>
+                        <input type="file" class="form-control" id="archivo"
+                               name="archivo" accept=".pdf,.jpg,.jpeg,.png,.gif" />
+                        <div class="form-text">
+                            <i class="bi bi-info-circle"></i> Formatos permitidos: PDF, JPG, PNG. Tamaño máximo: 5MB
+                        </div>
+                        <div id="archivoFeedback" class="invalid-feedback" style="display: none;">
+                            El archivo no es válido o excede el tamaño permitido
+                        </div>
+                    </div>
+                </div>
+                <!--end::Row-->
+            </div>
+            <!--end::Body-->
 
-	<script>
-// Validación del formulario
-(() => {
+            <!--begin::Footer-->
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Guardar Comprobante</button>
+                <a th:href="@{/comprobantes/listarcomprobante}" class="btn btn-secondary ms-2">Cancelar</a>
+            </div>
+            <!--end::Footer-->
+        </form>
+        <!--end::Form-->
+    </div>
+</div>
+
+<!--begin::JavaScript-->
+<script>
+(function () {
     'use strict';
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+
+    const form = document.querySelector('.needs-validation');
+    if (!form) return;
+
+    // Campos
+    const numeroInput = document.getElementById('comNumero');
+    const fechaInput = document.getElementById('comFechaSubida');
+    const archivoInput = document.getElementById('archivo');
+    const numeroFeedback = document.getElementById('numeroFeedback');
+    const fechaFeedback = document.getElementById('fechaFeedback');
+    const archivoFeedback = document.getElementById('archivoFeedback');
+
+    // Validación en tiempo real del número
+    if (numeroInput) {
+        numeroInput.addEventListener('input', function () {
+            const val = this.value.trim();
+            if (!val || isNaN(val) || parseInt(val) <= 0) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                numeroFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                numeroFeedback.style.display = 'none';
             }
-            form.classList.add('was-validated');
-        }, false);
+        });
+    }
+
+    // Validación de fecha (máximo hoy)
+    if (fechaInput) {
+        const hoy = new Date();
+        const yy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        fechaInput.max = `${yy}-${mm}-${dd}`;
+
+        fechaInput.addEventListener('input', function () {
+            if (!this.value) {
+                this.classList.add('is-invalid');
+                fechaFeedback.style.display = 'block';
+            } else if (this.value > this.max) {
+                this.classList.add('is-invalid');
+                fechaFeedback.textContent = 'La fecha no puede ser posterior a hoy.';
+                fechaFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                fechaFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // Validación del archivo
+    if (archivoInput) {
+        archivoInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) {
+                this.classList.remove('is-invalid', 'is-valid');
+                archivoFeedback.style.display = 'none';
+                return;
+            }
+
+            const tiposValidos = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            const tamanoMax = 5 * 1024 * 1024; // 5MB
+
+            if (!tiposValidos.includes(file.type) || file.size > tamanoMax) {
+                this.classList.add('is-invalid');
+                archivoFeedback.textContent = 
+                    !tiposValidos.includes(file.type) ? 
+                        'Solo se permiten PDF o imágenes (JPG, PNG, GIF)' :
+                        'El archivo excede el tamaño máximo (5MB)';
+                archivoFeedback.style.display = 'block';
+            } else {
+                this.classList.add('is-valid');
+                this.classList.remove('is-invalid');
+                archivoFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // Submit handler
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+
+        // Validar número
+        if (numeroInput) {
+            const val = numeroInput.value.trim();
+            if (!val || isNaN(val) || parseInt(val) <= 0) {
+                numeroInput.classList.add('is-invalid');
+                numeroFeedback.textContent = 'El numero debe ser mayor a 0.';
+                numeroFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                numeroInput.classList.remove('is-invalid');
+                numeroFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar fecha
+        if (fechaInput) {
+            if (!fechaInput.value) {
+                fechaInput.classList.add('is-invalid');
+                fechaFeedback.style.display = 'block';
+                isValid = false;
+            } else if (fechaInput.value > fechaInput.max) {
+                fechaInput.classList.add('is-invalid');
+                fechaFeedback.textContent = 'La fecha no puede ser posterior a hoy.';
+                fechaFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                fechaInput.classList.remove('is-invalid');
+                fechaFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar archivo (si existe)
+        if (archivoInput && archivoInput.files[0]) {
+            const file = archivoInput.files[0];
+            const tiposValidos = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            const tamanoMax = 5 * 1024 * 1024;
+            if (!tiposValidos.includes(file.type) || file.size > tamanoMax) {
+                archivoInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                archivoInput.classList.remove('is-invalid');
+            }
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
     });
 })();
-
-// Validación del archivo
-function validarArchivo(input) {
-    const archivo = input.files[0];
-    const errorDiv = document.getElementById('archivoError');
-    
-    if (archivo) {
-        // Validar tipo de archivo
-        const tipo = archivo.type;
-        const tiposPermitidos = [
-            'application/pdf',
-            'image/jpeg',
-            'image/jpg',
-            'image/png',
-            'image/gif'
-        ];
-        
-        if (!tiposPermitidos.includes(tipo)) {
-            errorDiv.textContent = 'Solo se permiten archivos PDF o imágenes (JPG, PNG, GIF)';
-            errorDiv.style.display = 'block';
-            input.value = '';
-            return false;
-        }
-        
-        // Validar tamaño (5MB)
-        if (archivo.size > 5 * 1024 * 1024) {
-            errorDiv.textContent = 'El archivo no puede exceder 5MB de tamaño';
-            errorDiv.style.display = 'block';
-            input.value = '';
-            return false;
-        }
-        
-        errorDiv.style.display = 'none';
-    }
-    
-    return true;
-}
 </script>
+<!--end::JavaScript-->
+
 </body>
 </html>
