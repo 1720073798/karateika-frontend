@@ -15,131 +15,453 @@
         <form class="needs-validation" novalidate 
               th:action="@{/pagos}" 
               th:object="${pago}" 
-              method="post">
+              method="post" id="formPago">
             <div class="card-body">
+                <!-- Mensaje de error general del servidor -->
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                
                 <div class="row g-3">
                     <!-- Alumno -->
                     <div class="col-md-6">
-                        <label for="fkalumno" class="form-label">Alumno <span class="text-danger">*</span></label>
-                        <select class="form-select" name="aluId" id="fkalumno" required>
+                        <label for="alu_id" class="form-label">Alumno <span class="text-danger">*</span></label>
+                        <select class="form-select" id="alu_id" name="fkalumno.alu_id" required onchange="actualizarAlumno()">
                             <option selected disabled value="0">Seleccione un alumno...</option>
                             <option th:each="alumno : ${listaAlumnos}"
                                     th:value="${alumno.alu_id}" 
-                                    th:text="${alumno.alu_nombre + ' ' + alumno.alu_apellido}">
+                                    th:text="${alumno.alu_nombre + ' ' + alumno.alu_apellido}"
+                                    th:selected="${pago.fkalumno != null && pago.fkalumno.alu_id == alumno.alu_id}"
+                                    th:data-nombre="${alumno.alu_nombre}"
+                                    th:data-apellido="${alumno.alu_apellido}">
                             </option>
                         </select>
-                        <div class="invalid-feedback">Seleccione un alumno.</div>
+                        <input type="hidden" name="fkalumno.alu_nombre" id="alu_nombre" 
+                               th:value="${pago.fkalumno != null ? pago.fkalumno.alu_nombre : ''}" />
+                        <input type="hidden" name="fkalumno.alu_apellido" id="alu_apellido" 
+                               th:value="${pago.fkalumno != null ? pago.fkalumno.alu_apellido : ''}" />
+                        <div id="alumnoFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor seleccione un alumno
+                        </div>
                     </div>
                     
-                    <!-- Comprobante (dropdown) -->
+                    <!-- Comprobante -->
                     <div class="col-md-6">
-                        <label for="fkcomprobante" class="form-label">Comprobante <span class="text-danger">*</span></label>
-                        <select class="form-select" name="comId" id="fkcomprobante" required>
+                        <label for="com_id" class="form-label">Comprobante <span class="text-danger">*</span></label>
+                        <select class="form-select" id="com_id" name="fkcomprobante.com_id" required onchange="actualizarComprobante()">
                             <option selected disabled value="0">Seleccione un comprobante...</option>
                             <option th:each="comprobante : ${listaComprobantes}"
                                     th:value="${comprobante.com_id}" 
-                                    th:text="${comprobante.com_numero}">
+                                    th:text="${comprobante.com_numero}"
+                                    th:selected="${pago.fkcomprobante != null && pago.fkcomprobante.com_id == comprobante.com_id}"
+                                    th:data-numero="${comprobante.com_numero}">
                             </option>
                         </select>
-                        <div class="invalid-feedback">Seleccione un comprobante válido.</div>
+                        <input type="hidden" name="fkcomprobante.com_numero" id="com_numero" 
+                               th:value="${pago.fkcomprobante != null ? pago.fkcomprobante.com_numero : ''}" />
+                        <div id="comprobanteFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor seleccione un comprobante válido
+                        </div>
                     </div>
 
                     <!-- Fecha de Pago -->
                     <div class="col-md-4">
-                        <label for="pagFechaPago" class="form-label">Fecha de Pago <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" id="pagFechaPago"
-                               th:field="*{pag_fecha_pago}" required/>
-                        <div class="invalid-feedback">Seleccione una fecha.</div>
+                        <label for="pag_fecha_pago" class="form-label">Fecha de Pago <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="pag_fecha_pago"
+                               name="pag_fecha_pago" required
+                               th:value="${pago.pag_fecha_pago != null ? #temporals.format(pago.pag_fecha_pago, 'yyyy-MM-dd') : ''}" />
+                        <div id="fechaPagoFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor seleccione una fecha válida
+                        </div>
                     </div>
 
                     <!-- Método de Pago -->
                     <div class="col-md-4">
-                        <label for="pagMetodoPago" class="form-label">Método de Pago <span class="text-danger">*</span></label>
-                        <select class="form-select" id="pagMetodoPago"
-                                th:field="*{pag_metodo_pago}" required>
+                        <label for="pag_metodo_pago" class="form-label">Método de Pago <span class="text-danger">*</span></label>
+                        <select class="form-select" id="pag_metodo_pago"
+                                name="pag_metodo_pago" required>
                             <option selected disabled value="">Elija...</option>
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                            <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-                            <option value="Tarjeta de Débito">Tarjeta de Débito</option>
-                            <option value="Otro">Otro</option>
+                            <option value="Efectivo" th:selected="${pago.pag_metodo_pago == 'Efectivo'}">Efectivo</option>
+                            <option value="Transferencia Bancaria" th:selected="${pago.pag_metodo_pago == 'Transferencia Bancaria'}">Transferencia Bancaria</option>
+                            <option value="Tarjeta de Crédito" th:selected="${pago.pag_metodo_pago == 'Tarjeta de Crédito'}">Tarjeta de Crédito</option>
+                            <option value="Tarjeta de Débito" th:selected="${pago.pag_metodo_pago == 'Tarjeta de Débito'}">Tarjeta de Débito</option>
+                            <option value="Otro" th:selected="${pago.pag_metodo_pago == 'Otro'}">Otro</option>
                         </select>
-                        <div class="invalid-feedback">Seleccione un método.</div>
+                        <div id="metodoPagoFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor seleccione un método de pago
+                        </div>
                     </div>
 
                     <!-- Monto -->
                     <div class="col-md-4">
-                        <label for="pagMonto" class="form-label">Monto <span class="text-danger">*</span></label>
+                        <label for="pag_monto" class="form-label">Monto <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" class="form-control" id="pagMonto"
-                                   th:field="*{pag_monto}" required/>
+                            <input type="number" step="0.01" class="form-control" id="pag_monto"
+                                   name="pag_monto" required min="0.01"
+                                   th:value="${pago.pag_monto != null ? pago.pag_monto : ''}" />
                         </div>
-                        <div class="invalid-feedback">Ingrese un monto válido.</div>
+                        <div id="montoFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor ingrese un monto válido (mayor a 0)
+                        </div>
                     </div>
 
                     <!-- Número de Recibo -->
                     <div class="col-md-6">
-                        <label for="pagNumeroRecibo" class="form-label">Número de Recibo</label>
-                        <input type="text" class="form-control" id="pagNumeroRecibo" maxlength="20"
-                               th:field="*{pag_numero_recibo}"/>
+                        <label for="pag_numero_recibo" class="form-label">Número de Recibo</label>
+                        <input type="text" class="form-control" id="pag_numero_recibo" maxlength="20"
+                               name="pag_numero_recibo"
+                               th:value="${pago.pag_numero_recibo != null ? pago.pag_numero_recibo : ''}" />
                     </div>
 
                     <!-- Registrado por -->
                     <div class="col-md-6">
-                        <label for="pagRegistradoPor" class="form-label">Registrado por <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="pagRegistradoPor" 
-                               th:field="*{pag_registrado_por}" required/>
-                        <div class="invalid-feedback">Ingrese quien registró.</div>
+                        <label for="pag_registrado_por" class="form-label">Registrado por <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="pag_registrado_por" 
+                               name="pag_registrado_por" required minlength="2"
+                               th:value="${pago.pag_registrado_por != null ? pago.pag_registrado_por : ''}" />
+                        <div id="registradoPorFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor ingrese un nombre válido (mínimo 2 caracteres)
+                        </div>
                     </div>
 
-                    <!-- Fecha de Registro (automática) -->
+                    <!-- Fecha de Registro (AHORA EDITABLE) -->
                     <div class="col-md-6">
-                        <label for="pagFechaRegistro" class="form-label">Fecha de Registro <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" id="pagFechaRegistro"
-                               th:field="*{pag_fecha_registro}" 
-                               value="" required readonly/>
-                        <small class="text-muted">Se establecerá automáticamente con la fecha actual</small>
+                        <label for="pag_fecha_registro" class="form-label">Fecha de Registro <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="pag_fecha_registro"
+                               name="pag_fecha_registro" required
+                               th:value="${pago.pag_fecha_registro != null ? #temporals.format(pago.pag_fecha_registro, 'yyyy-MM-dd') : ''}" />
+                        <small class="text-muted">Ingrese la fecha de registro manualmente</small>
+                        <div id="fechaRegistroFeedback" class="invalid-feedback" style="display: none;">
+                            Por favor seleccione una fecha válida
+                        </div>
                     </div>
 
                     <!-- Observación -->
                     <div class="col-12">
-                        <label for="pagObservacion" class="form-label">Observaciones</label>
-                        <textarea class="form-control" id="pagObservacion" rows="3" 
-                                  placeholder="Ej: Pago adelantado, descuento aplicado..."
-                                  th:field="*{pag_observacion}"></textarea>
+                        <label for="pag_observacion" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="pag_observacion" rows="3" 
+                                  name="pag_observacion" maxlength="500"
+                                  th:text="${pago.pag_observacion != null ? pago.pag_observacion : ''}"></textarea>
                     </div>
                 </div>
             </div>
             
             <div class="card-footer">
-                <button class="btn btn-success" type="submit">Registrar Pago</button>
-                <a th:href="@{/pagos/listarpago}" class="btn btn-secondary ms-2">Cancelar</a>
+                <button class="btn btn-success" type="submit">
+                    <i class="bi bi-check-circle"></i> Registrar Pago
+                </button>
+                <a th:href="@{/pagos/listarpago}" class="btn btn-secondary ms-2">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-// Establecer fecha de registro automáticamente
-document.addEventListener('DOMContentLoaded', function() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('pagFechaRegistro').value = today;
-});
-
-// Validación del formulario
-(() => {
+(function () {
     'use strict';
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+
+    const form = document.getElementById('formPago');
+    if (!form) return;
+
+    // Campos
+    const alumnoSelect = document.getElementById('alu_id');
+    const comprobanteSelect = document.getElementById('com_id');
+    const fechaPagoInput = document.getElementById('pag_fecha_pago');
+    const fechaRegistroInput = document.getElementById('pag_fecha_registro'); // ✅ NUEVO
+    const metodoPagoSelect = document.getElementById('pag_metodo_pago');
+    const montoInput = document.getElementById('pag_monto');
+    const registradoPorInput = document.getElementById('pag_registrado_por');
+    
+    const alumnoFeedback = document.getElementById('alumnoFeedback');
+    const comprobanteFeedback = document.getElementById('comprobanteFeedback');
+    const fechaPagoFeedback = document.getElementById('fechaPagoFeedback');
+    const fechaRegistroFeedback = document.getElementById('fechaRegistroFeedback'); // ✅ NUEVO
+    const metodoPagoFeedback = document.getElementById('metodoPagoFeedback');
+    const montoFeedback = document.getElementById('montoFeedback');
+    const registradoPorFeedback = document.getElementById('registradoPorFeedback');
+
+    // ✅ NO establecer fecha automáticamente - el usuario la ingresa manualmente
+    
+    // Validación en tiempo real - Alumno
+    if (alumnoSelect) {
+        alumnoSelect.addEventListener('change', function () {
+            if (this.value === '0' || !this.value) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                alumnoFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                alumnoFeedback.style.display = 'none';
             }
-            form.classList.add('was-validated');
-        }, false);
+            actualizarAlumno();
+        });
+    }
+
+    // Validación en tiempo real - Comprobante
+    if (comprobanteSelect) {
+        comprobanteSelect.addEventListener('change', function () {
+            if (this.value === '0' || !this.value) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                comprobanteFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                comprobanteFeedback.style.display = 'none';
+            }
+            actualizarComprobante();
+        });
+    }
+
+    // Validación en tiempo real - Fecha de Pago (máximo hoy)
+    if (fechaPagoInput) {
+        const hoy = new Date();
+        const yy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        fechaPagoInput.max = `${yy}-${mm}-${dd}`;
+
+        fechaPagoInput.addEventListener('input', function () {
+            if (!this.value) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                fechaPagoFeedback.textContent = 'Por favor seleccione una fecha válida';
+                fechaPagoFeedback.style.display = 'block';
+            } else if (this.value > this.max) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                fechaPagoFeedback.textContent = 'La fecha no puede ser posterior a hoy';
+                fechaPagoFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                fechaPagoFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // ✅ Validación en tiempo real - Fecha de Registro (máximo hoy)
+    if (fechaRegistroInput) {
+        const hoy = new Date();
+        const yy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        fechaRegistroInput.max = `${yy}-${mm}-${dd}`;
+
+        fechaRegistroInput.addEventListener('input', function () {
+            if (!this.value) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                fechaRegistroFeedback.textContent = 'Por favor seleccione una fecha válida';
+                fechaRegistroFeedback.style.display = 'block';
+            } else if (this.value > this.max) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                fechaRegistroFeedback.textContent = 'La fecha no puede ser posterior a hoy';
+                fechaRegistroFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                fechaRegistroFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // Validación en tiempo real - Método de Pago
+    if (metodoPagoSelect) {
+        metodoPagoSelect.addEventListener('change', function () {
+            if (!this.value) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                metodoPagoFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                metodoPagoFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // Validación en tiempo real - Monto
+    if (montoInput) {
+        montoInput.addEventListener('input', function () {
+            const val = this.value.trim();
+            const monto = parseFloat(val);
+            
+            if (!val || isNaN(monto) || monto <= 0) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                montoFeedback.textContent = 'Por favor ingrese un monto válido (mayor a 0)';
+                montoFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                montoFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // Validación en tiempo real - Registrado por
+    if (registradoPorInput) {
+        registradoPorInput.addEventListener('input', function () {
+            const val = this.value.trim();
+            
+            if (val.length < 2) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+                registradoPorFeedback.textContent = 'Por favor ingrese un nombre válido (mínimo 2 caracteres)';
+                registradoPorFeedback.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                registradoPorFeedback.style.display = 'none';
+            }
+        });
+    }
+
+    // Funciones para actualizar datos ocultos
+    window.actualizarAlumno = function() {
+        const select = document.getElementById('alu_id');
+        const option = select.options[select.selectedIndex];
+        document.getElementById('alu_nombre').value = option.getAttribute('data-nombre') || '';
+        document.getElementById('alu_apellido').value = option.getAttribute('data-apellido') || '';
+    };
+
+    window.actualizarComprobante = function() {
+        const select = document.getElementById('com_id');
+        const option = select.options[select.selectedIndex];
+        document.getElementById('com_numero').value = option.getAttribute('data-numero') || '';
+    };
+
+    // Submit handler
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+
+        // Validar Alumno
+        if (alumnoSelect) {
+            if (alumnoSelect.value === '0' || !alumnoSelect.value) {
+                alumnoSelect.classList.add('is-invalid');
+                alumnoFeedback.textContent = 'Por favor seleccione un alumno';
+                alumnoFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                alumnoSelect.classList.remove('is-invalid');
+                alumnoFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar Comprobante
+        if (comprobanteSelect) {
+            if (comprobanteSelect.value === '0' || !comprobanteSelect.value) {
+                comprobanteSelect.classList.add('is-invalid');
+                comprobanteFeedback.textContent = 'Por favor seleccione un comprobante válido';
+                comprobanteFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                comprobanteSelect.classList.remove('is-invalid');
+                comprobanteFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar Fecha de Pago
+        if (fechaPagoInput) {
+            if (!fechaPagoInput.value) {
+                fechaPagoInput.classList.add('is-invalid');
+                fechaPagoFeedback.textContent = 'Por favor seleccione una fecha válida';
+                fechaPagoFeedback.style.display = 'block';
+                isValid = false;
+            } else if (fechaPagoInput.value > fechaPagoInput.max) {
+                fechaPagoInput.classList.add('is-invalid');
+                fechaPagoFeedback.textContent = 'La fecha no puede ser posterior a hoy';
+                fechaPagoFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                fechaPagoInput.classList.remove('is-invalid');
+                fechaPagoFeedback.style.display = 'none';
+            }
+        }
+
+        // ✅ Validar Fecha de Registro
+        if (fechaRegistroInput) {
+            if (!fechaRegistroInput.value) {
+                fechaRegistroInput.classList.add('is-invalid');
+                fechaRegistroFeedback.textContent = 'Por favor seleccione la fecha de registro';
+                fechaRegistroFeedback.style.display = 'block';
+                isValid = false;
+            } else if (fechaRegistroInput.value > fechaRegistroInput.max) {
+                fechaRegistroInput.classList.add('is-invalid');
+                fechaRegistroFeedback.textContent = 'La fecha no puede ser posterior a hoy';
+                fechaRegistroFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                fechaRegistroInput.classList.remove('is-invalid');
+                fechaRegistroFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar Método de Pago
+        if (metodoPagoSelect) {
+            if (!metodoPagoSelect.value) {
+                metodoPagoSelect.classList.add('is-invalid');
+                metodoPagoFeedback.textContent = 'Por favor seleccione un método de pago';
+                metodoPagoFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                metodoPagoSelect.classList.remove('is-invalid');
+                metodoPagoFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar Monto
+        if (montoInput) {
+            const val = montoInput.value.trim();
+            const monto = parseFloat(val);
+            
+            if (!val || isNaN(monto) || monto <= 0) {
+                montoInput.classList.add('is-invalid');
+                montoFeedback.textContent = 'Por favor ingrese un monto válido (mayor a 0)';
+                montoFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                montoInput.classList.remove('is-invalid');
+                montoFeedback.style.display = 'none';
+            }
+        }
+
+        // Validar Registrado por
+        if (registradoPorInput) {
+            const val = registradoPorInput.value.trim();
+            
+            if (val.length < 2) {
+                registradoPorInput.classList.add('is-invalid');
+                registradoPorFeedback.textContent = 'Por favor ingrese un nombre válido (mínimo 2 caracteres)';
+                registradoPorFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                registradoPorInput.classList.remove('is-invalid');
+                registradoPorFeedback.style.display = 'none';
+            }
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Scroll al primer error
+            const primerError = form.querySelector('.is-invalid');
+            if (primerError) {
+                primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                primerError.focus();
+            }
+        }
+        form.classList.add('was-validated');
     });
+    
+    // ✅ Inicializar datos ocultos si ya hay valores
+    actualizarAlumno();
+    actualizarComprobante();
 })();
 </script>
 </body>

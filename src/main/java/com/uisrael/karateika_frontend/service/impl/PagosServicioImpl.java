@@ -2,6 +2,7 @@ package com.uisrael.karateika_frontend.service.impl;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,7 +27,8 @@ public class PagosServicioImpl implements IPagosServicio {
 	// ✅ ÚNICO MÉTODO PARA CREAR Y EDITAR (lógica del profesor)
 	@Override
 	public void guardarPago(PagosDTORequest dto) {
-		clienteWeb.post().uri("/pagos").bodyValue(dto).retrieve().toBodilessEntity().block();
+		clienteWeb.post().uri("/pagos").contentType(MediaType.APPLICATION_JSON).bodyValue(dto).retrieve()
+				.toBodilessEntity().block();
 	}
 
 	@Override

@@ -37,15 +37,35 @@ public class ComprobanteControllador {
 		return "/comprobante/nuevocomprobantes";
 	}
 
-	// ✅ ÚNICO MÉTODO PARA CREAR Y EDITAR (lógica del profesor)
 	@PostMapping
-	public String guardarComprobante(@ModelAttribute ComprobanteDTORequest comprobante,
-			@RequestParam(value = "archivo", required = false) MultipartFile archivo) {
-
-		servicioComprobante.guardarComprobante(comprobante, archivo);
-		return "redirect:/comprobantes/listarcomprobante";
+	public String guardarComprobante(
+	        @ModelAttribute ComprobanteDTORequest comprobante,
+	        @RequestParam(value = "archivo", required = false) MultipartFile archivo,
+	        Model model) {
+	    
+	    // Validación manual del número
+	    if (comprobante.getCom_numero() == null || comprobante.getCom_numero() <= 0) {
+	        model.addAttribute("error", "El número de comprobante es obligatorio y debe ser mayor a 0");
+	        model.addAttribute("comprobante", comprobante);
+	        return "/comprobante/nuevocomprobantes";
+	    }
+	    
+	    // Validación manual de la fecha
+	    if (comprobante.getCom_fecha_subida() == null) {
+	        model.addAttribute("error", "La fecha de subida es obligatoria");
+	        model.addAttribute("comprobante", comprobante);
+	        return "/comprobante/nuevocomprobantes";
+	    }
+	    
+	    try {
+	        servicioComprobante.guardarComprobante(comprobante, archivo);
+	        return "redirect:/comprobantes/listarcomprobante";
+	    } catch (Exception e) {
+	        model.addAttribute("error", "Error al guardar: " + e.getMessage());
+	        model.addAttribute("comprobante", comprobante);
+	        return "/comprobante/nuevocomprobantes";
+	    }
 	}
-
 	@GetMapping("/editar/{id}")
 	public String editarComprobante(@PathVariable int id, Model model) {
 		ComprobanteDTOResponse comprobante = servicioComprobante.buscarPorId(id);
