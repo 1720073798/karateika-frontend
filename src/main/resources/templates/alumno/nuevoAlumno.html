@@ -36,6 +36,8 @@
 							<label for="validationCustom01" class="form-label">Nombres:*</label>
 							<input type="text" class="form-control" id="txtnombrealumno"
 								th:field="*{alu_nombre}" required />
+							<!-- Feedback para Nombres -->
+							<div class="invalid-feedback">Por favor ingrese los nombres.</div>
 						</div>
 
 						<!-- Apellidos (ejemplo) -->
@@ -43,20 +45,21 @@
 							<label for="validationCustom02" class="form-label">Apellidos:*</label>
 							<input type="text" class="form-control" id="txtapellidoalumno"
 								required th:field="*{alu_apellido}" />
+							<!-- Feedback para Apellidos -->
+							<div class="invalid-feedback">Por favor ingrese los apellidos.</div>
 						</div>
 
 						<!-- cedeula (ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Cedula:*</label>
-							<input type="text" class="form-control" id="txtcedeulaalumno"
+							<input type="text" inputmode="numeric" class="form-control" id="txtcedeulaalumno"
 								th:field="*{alu_cedula}" maxlength="10" minlength="10"
 								pattern="[0-9]{10}" required />
 							<!-- Mensaje de error de cédula (server-side) -->
 							<div th:if="${cedulaError}" class="invalid-feedback d-block"
 								th:text="${cedulaError}"></div>
 							<!-- Mensaje de validación cliente -->
-							<div id="cedulaFeedback" class="invalid-feedback"
-								style="display: none"></div>
+							<div id="cedulaFeedback" class="invalid-feedback" style="display: none"></div>
 						</div>
 
 						<!--  email(ejemplo) -->
@@ -65,6 +68,8 @@
 							<input type="email" class="form-control" id="txtemailalumno"
 								th:field="*{alu_email}" placeholder="correo@ejemplo.com"
 								required />
+							<!-- Feedback para Email -->
+							<div class="invalid-feedback">Ingrese un email válido.</div>
 						</div>
 
 						<!--  direccion(ejemplo) -->
@@ -72,13 +77,17 @@
 							<label for="validationCustom02" class="form-label">Domicilio:*</label>
 							<input type="text" class="form-control" id="txtdireccionalumno"
 								th:field="*{alu_direccion}" required />
+							<!-- Feedback para Domicilio -->
+							<div class="invalid-feedback">Ingrese la dirección.</div>
 						</div>
 
 						<!--  telefono(ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Teléfono:*</label>
-							<input type="text" class="form-control" id="txttelefonolumno"
-								pattern="[0-9]{10}" th:field="*{alu_telefono}" required />
+							<input type="text" inputmode="numeric" class="form-control" id="txttelefonolumno"
+								pattern="[0-9]{10}" maxlength="10" th:field="*{alu_telefono}" required />
+							<!-- Feedback para Teléfono -->
+							<div id="telefonoAlumnoFeedback" class="invalid-feedback">Ingrese un teléfono válido de 10 dígitos.</div>
 						</div>
 
 
@@ -87,6 +96,8 @@
 							<label for="validationCustom02" class="form-label">Fecha
 								de Nacimiento:*</label> <input type="date" class="form-control"
 								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" required />
+							<!-- Feedback para Fecha de nacimiento -->
+							<div id="fechaNacimientoFeedback" class="invalid-feedback">El alumno debe tener al menos 4 años.</div>
 
 						</div>
 
@@ -96,6 +107,8 @@
 							<label for="validationCustom02" class="form-label">Fecha
 								de Ingreso:*</label> <input type="date" class="form-control"
 								id="fechaIngreso" th:field="*{alu_fecha_ingreso}" required />
+							<!-- Feedback para Fecha de ingreso -->
+							<div class="invalid-feedback">Seleccione una fecha de ingreso válida (no futura).</div>
 						</div>
 
 
@@ -104,13 +117,17 @@
 							<label for="validationCustom02" class="form-label">Nombre
 								de Representante:</label> <input type="text" class="form-control"
 								id="txtNombreRepresentante" th:field="*{alu_nombre_representante}" />
+							<!-- Feedback para Nombre de representante -->
+							<div class="invalid-feedback">Ingrese el nombre del representante si aplica.</div>
 						</div>
 
 						<!--  telefono representante(ejemplo) -->
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Telefono
-								de Representante:</label> <input type="text" class="form-control"
-								id="txtTelefonoRepresentante" th:field="*{alu_telefono_representante}" />
+								de Representante:</label> <input type="text" inputmode="numeric" class="form-control"
+								id="txtTelefonoRepresentante" maxlength="10" pattern="[0-9]{10}" th:field="*{alu_telefono_representante}" />
+							<!-- Feedback para Telefono de representante -->
+							<div id="telefonoRepresentanteFeedback" class="invalid-feedback">Ingrese el teléfono del representante (10 dígitos) si aplica.</div>
 						</div>
 
 						<!-- Mensaje de error del representante (server-side) -->
@@ -134,6 +151,7 @@
 										th:text="${cinturon.nombre}"></option>
 								</th:block>
 							</select>
+							<div class="invalid-feedback">Seleccione un cinturón de ingreso.</div>
 						</div>
 
 						<!-- Cinturon de ingreso -->
@@ -149,6 +167,7 @@
 										th:text="${cinturon.nombre}"></option>
 								</th:block>
 							</select>
+							<div class="invalid-feedback">Seleccione un cinturón actual válido.</div>
 						</div>
 
 						<div class="col-md-6 form-check mt-4">
@@ -198,6 +217,7 @@
 				}
 
 				const fechaInput = document.getElementById('fechaNacimiento');
+				const fechaFeedback = document.getElementById('fechaNacimientoFeedback');
 				if (fechaInput) {
 					const maxFecha = fechaMaximaMenosAnios(4);
 					// Asignar atributo max para que el selector de fecha no permita días posteriores
@@ -206,9 +226,11 @@
 					// Mensaje de validación personalizado si el usuario introduce una fecha inválida
 					fechaInput.addEventListener('input', function () {
 						if (this.value && this.value > this.max) {
-							this.setCustomValidity('El alumno debe tener al menos 4 años. Seleccione una fecha anterior o igual a ' + this.max + '.');
+							this.setCustomValidity('El alumno debe tener al menos 4 años.');
+							if (fechaFeedback) { fechaFeedback.textContent = 'El alumno debe tener al menos 4 años.'; fechaFeedback.style.display = 'block'; }
 						} else {
 							this.setCustomValidity('');
+							if (fechaFeedback) { fechaFeedback.style.display = 'none'; }
 						}
 						// actualizar estado de campos representante al cambiar fecha
 						actualizarRepresentante();
@@ -301,10 +323,19 @@
 
 				if (cedulaInput) {
 					cedulaInput.addEventListener('input', async function () {
+						// eliminar cualquier caracter que no sea dígito y limitar a 10
+						this.value = this.value.replace(/\D/g, '').slice(0, 10);
 						const val = this.value ? this.value.trim().toLowerCase() : '';
 						if (!val) {
 							cedulaFeedback.style.display = 'none';
 							this.classList.remove('is-invalid');
+							return;
+						}
+						// si la longitud es menor a 10, mostrar mensaje de longitud
+						if (this.value.length < 10) {
+							cedulaFeedback.textContent = 'La cédula debe tener 10 dígitos.';
+							cedulaFeedback.style.display = 'block';
+							this.classList.add('is-invalid');
 							return;
 						}
 						const list = await cargarCedulas();
@@ -315,6 +346,42 @@
 						} else {
 							cedulaFeedback.style.display = 'none';
 							this.classList.remove('is-invalid');
+						}
+					});
+				}
+
+				// sanitizar y validar teléfono alumno en tiempo real
+				const telAlumnoInput = document.getElementById('txttelefonolumno');
+				const telAlumnoFb = document.getElementById('telefonoAlumnoFeedback');
+				if (telAlumnoInput) {
+					telAlumnoInput.addEventListener('input', function () {
+						this.value = this.value.replace(/\D/g, '').slice(0, 10);
+						if (this.value.length === 10) {
+							telAlumnoFb.style.display = 'none';
+							this.classList.remove('is-invalid');
+						} else {
+							// mostrar pero no forzar hasta submit
+							telAlumnoFb.textContent = 'Ingrese un teléfono válido de 10 dígitos.';
+							telAlumnoFb.style.display = 'block';
+							this.classList.add('is-invalid');
+						}
+					});
+				}
+
+				// sanitizar y validar teléfono representante en tiempo real
+				const telRepInput = document.getElementById('txtTelefonoRepresentante');
+				const telRepFb = document.getElementById('telefonoRepresentanteFeedback');
+				if (telRepInput) {
+					telRepInput.addEventListener('input', function () {
+						this.value = this.value.replace(/\D/g, '').slice(0, 10);
+						if (this.value.length === 10 || this.value.length === 0) {
+							// válido si está vacío (no obligatorio) o tiene 10 dígitos
+							telRepFb.style.display = 'none';
+							this.classList.remove('is-invalid');
+						} else {
+							telRepFb.textContent = 'Ingrese un teléfono válido de 10 dígitos.';
+							telRepFb.style.display = 'block';
+							this.classList.add('is-invalid');
 						}
 					});
 				}
@@ -332,13 +399,40 @@
 						// Reaplicar validaciones personalizadas de fecha si es necesario
 						if (fechaInput && fechaInput.value && fechaInput.value > fechaInput.max) {
 							fechaInput.setCustomValidity('El alumno debe tener al menos 4 años.');
+							if (fechaFeedback) { fechaFeedback.textContent = 'El alumno debe tener al menos 4 años.'; fechaFeedback.style.display = 'block'; }
 						}
 						if (fechaIngresoInput && fechaIngresoInput.value && fechaIngresoInput.value > fechaIngresoInput.max) {
 							fechaIngresoInput.setCustomValidity('No se permiten fechas posteriores a la fecha actual.');
 						}
 						// Validación de cédula (marcada por el listener de input)
 						if (cedulaInput && cedulaInput.value && cedulaInput.classList.contains('is-invalid')) {
-							cedulaInput.setCustomValidity('Usuario ya está registrado');
+							cedulaInput.setCustomValidity('Usuario ya está registrado o cédula inválida');
+						}
+
+						// Si la cédula tiene menos de 10 dígitos al enviar, marcar como inválida con mensaje claro
+						if (cedulaInput && cedulaInput.value && cedulaInput.value.replace(/\D/g, '').length < 10) {
+							cedulaInput.setCustomValidity('La cédula debe tener 10 dígitos.');
+							if (cedulaFeedback) { cedulaFeedback.textContent = 'La cédula debe tener 10 dígitos.'; cedulaFeedback.style.display = 'block'; }
+						}
+						// Validación de teléfonos en submit
+						if (telAlumnoInput && telAlumnoInput.value && telAlumnoInput.value.length < 10) {
+							telAlumnoInput.setCustomValidity('Ingrese un teléfono válido de 10 dígitos.');
+							if (telAlumnoFb) { telAlumnoFb.style.display = 'block'; }
+						}
+						// Si el representante es obligatorio (cuando repNombre o repTelefono están marcados required), validar su contenido
+						if (repNombre && repNombre.required && (!repNombre.value || !repNombre.value.trim())) {
+							repNombre.setCustomValidity('Ingrese el nombre del representante.');
+							const fb = repNombre.parentElement ? repNombre.parentElement.querySelector('.invalid-feedback') : null;
+							if (fb) { fb.textContent = 'Ingrese el nombre del representante.'; fb.style.display = 'block'; }
+						}
+						if (repTelefono && repTelefono.required) {
+							if (!repTelefono.value || repTelefono.value.length === 0) {
+								repTelefono.setCustomValidity('Ingrese el teléfono del representante.');
+								if (telRepFb) { telRepFb.textContent = 'Ingrese el teléfono del representante.'; telRepFb.style.display = 'block'; }
+							} else if (repTelefono.value && repTelefono.value.length < 10) {
+								repTelefono.setCustomValidity('El teléfono del representante debe tener 10 dígitos.');
+								if (telRepFb) { telRepFb.textContent = 'El teléfono del representante debe tener 10 dígitos.'; telRepFb.style.display = 'block'; }
+							}
 						}
 						// Si la validación del select de cinturones puso un mensaje, evitar submit
 						const cinturonFeedback = document.getElementById('cinturonFeedback');
@@ -355,6 +449,14 @@
 						if (!form.checkValidity()) {
 							event.preventDefault();
 							event.stopPropagation();
+							// Añadir clases 'is-invalid' a los campos inválidos para que Bootstrap muestre los mensajes
+							const invalids = form.querySelectorAll(':invalid');
+							Array.from(invalids).forEach(function (el) {
+								el.classList.add('is-invalid');
+								// si tiene un hermano .invalid-feedback, asegurarlo visible (Bootstrap lo hace con was-validated, pero garantizamos)
+								const fb = el.parentElement ? el.parentElement.querySelector('.invalid-feedback') : null;
+								if (fb) fb.style.display = 'block';
+							});
 						}
 						form.classList.add('was-validated');
 					}, false);

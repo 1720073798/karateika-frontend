@@ -44,11 +44,11 @@
 							<!-- boolean a SI/NO -->
 							<td th:text="${ascenso.asc_c_generado ? 'SI' : 'NO'}"></td>
 
-							<td><a href="#" class="btn btn-sm btn-info">Ver</a> <a
-								href="#" class="btn btn-sm btn-warning">Editar</a> <a href="#"
-								class="btn btn-sm btn-danger"
-								onclick="return confirm('¿Estás seguro que quieres eliminar?');">
-									Eliminar </a></td>
+							<td>
+								<!-- use absolute paths so Thymeleaf doesn't generate a relative doubled path -->
+								<a th:href="@{/ascensos/buscar/{idAscenso}(idAscenso=${ascenso.asc_id_serial})}" class="btn btn-sm btn-primary" title="Editar"> <i class="fa-solid fa-pen-to-square"></i></a>
+								
+							</td>
 						</tr>
 					</tbody>
 				</table>

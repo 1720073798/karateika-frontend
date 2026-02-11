@@ -2,7 +2,6 @@ package com.uisrael.karateika_frontend.service.impl;
 
 import java.util.List;
 
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,13 +26,18 @@ public class AscensoServicioImpl implements IAscensoServicio {
 
 	@Override
 	public void crearAscenso(AscensoDTORequest dto) {
-		clienteWeb.post().uri("/ascensos").bodyValue(dto).retrieve().toBodilessEntity().block();
+		try {
+			clienteWeb.post().uri("/ascensos").bodyValue(dto).retrieve().toBodilessEntity().block();
+		} catch (org.springframework.web.reactive.function.client.WebClientResponseException e) {
+			String body = e.getResponseBodyAsString();
+			throw new RuntimeException("API error: status " + e.getStatusCode() + " body: " + body, e);
+		}
 	}
 
 	@Override
-	public AscensoDTOResponse buscarPorId(int id) {
+	public AscensoDTOResponse buscarPorId(int idAscenso) {
 		// Se puede implementar luego si lo necesitas
-		return null;
+		return clienteWeb.get().uri(uriBuilder -> uriBuilder.path("/ascensos/buscarid/{idAscenso}").build(idAscenso)).retrieve().bodyToMono(AscensoDTOResponse.class).block();
 	}
 
 	@Override

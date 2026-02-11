@@ -22,15 +22,18 @@
 				<div class="card-body">
 					<!--begin::Row-->
 					<div class="row g-3">
+						<input type="hidden" class="form-control" id="txtidAsenso"
+							th:field="*{asc_id_serial}" />
 
 						<div class="col-md-6">
 							<label for="cbalumno" class="form-label">Alumno </label> <select
-								id="cbalumno" class="form-select" th:field="*{fkalumno.alu_id}">
-								<option value="0">--Seleccione categoría--</option>
+								id="cbalumno" class="form-select" th:field="*{fkalumno.alu_id}" required>
+								<option value="0">--Seleccione Alumno--</option>
 								<option th:each="alumnos : ${alumnoModel}"
 									th:value="${alumnos.alu_id}"
 									th:text="${alumnos.alu_nombre}+' '+${alumnos.alu_apellido}"></option>
 							</select>
+							<div id="cbalumnoFeedback" class="invalid-feedback">Seleccione un alumno</div>
 						</div>
 
 						<!-- CINTURON -->
@@ -39,13 +42,14 @@
 								Cinturon:*</label> <select class="form-select" id="cbcinturon"
 								th:field="*{asc_cinturon}" required>
 
-								<option value="">Seleccione...</option>
+								<!-- placeholder: keep value empty but allow it to be focusable so validation works reliably -->
+								<option value="0">Seleccione...</option>
 								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
 								<th:block th:each="cinturon : ${cinturones}">
-									<option th:value="${cinturon.name()}"
-										th:text="${cinturon.nombre}"></option>
+									<option th:value="${cinturon.name()}" th:text="${cinturon.nombre}"></option>
 								</th:block>
 							</select>
+							<div id="cbcinturonFeedback" class="invalid-feedback">Campo requerido</div>
 						</div>
 
 						<!-- FECHA EXAMEN -->
@@ -116,25 +120,204 @@
 				<!--end::Footer-->
 			</form>
 			<!--end::Form-->
-		</div>
-	</div>
-
-	<!--begin::JavaScript-->
+					<!--begin::JavaScript-->
 	<script>
         (() => {
             'use strict';
             const forms = document.querySelectorAll('.needs-validation');
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
+            const selectCinturon = document.getElementById('cbcinturon');
+            const selectAlumno = document.getElementById('cbalumno');
+            const calificacion = document.getElementById('ascCalificacion');
+            const calificacionFeedback = document.querySelector('#ascCalificacion + .invalid-feedback');
+
+            // Helper: hide all invalid-feedback messages (so only one shows at a time)
+            const hideAllFeedbacks = function () {
+                document.querySelectorAll('.invalid-feedback').forEach(f => {
+                    f.classList.remove('d-block');
+                });
+            };
+            
+            const showFeedbackFor = function (el) {
+                hideAllFeedbacks();
+                if (!el) return;
+                // Prefer the immediate sibling invalid-feedback
+                let fb = el.nextElementSibling;
+                if (!(fb && fb.classList && fb.classList.contains('invalid-feedback'))) {
+                    // fallback: search inside parent column
+                    const parent = el.closest('.col-md-6, .col-md-12, .form-group, .form-check');
+                    if (parent) fb = parent.querySelector('.invalid-feedback');
+                }
+                if (fb) fb.classList.add('d-block');
+            };
+
+            // Normalize initial calificacion value:
+            // If this is a NEW form (hidden id empty) and the server populated 0 or 0.0 by default
+            // then clear it so the field appears empty to the user. If editing an existing record
+            // we keep the real value (even if it's 0).
+            const idAsenso = document.getElementById('txtidAsenso');
+            if (calificacion) {
+                try {
+                    const isNew = !idAsenso || !idAsenso.value || idAsenso.value.toString().trim() === '';
+                    const val = calificacion.value ? calificacion.value.toString().trim() : '';
+                    // treat '0', '0.0', '0.00' as an auto-filled default from a primitive double
+                    const isZeroLike = /^0(?:\.0+)?$/.test(val);
+                    if (isNew && (val === '' || isZeroLike)) {
+                        calificacion.value = '';
+                        calificacion.classList.remove('is-valid');
+                        calificacion.setCustomValidity('');
+                        calificacion.removeAttribute('aria-invalid');
                     }
+                } catch (e) {
+                    // ignore if property access fails in some browsers
+                }
+            }
+
+            // Clear custom validity on user interaction
+            if (selectCinturon) {
+                selectCinturon.addEventListener('change', function () {
+                    if (this.value && this.value.trim() !== '') {
+                        this.classList.remove('is-invalid');
+                        this.setCustomValidity('');
+                        this.setAttribute('aria-invalid', 'false');
+                    } else {
+                        // keep invalid until user selects a valid option
+                        this.setCustomValidity('Seleccione un cinturón válido.');
+                        this.setAttribute('aria-invalid', 'true');
+                    }
+                });
+            }
+
+            // Clear custom validity for alumno select on change
+            if (selectAlumno) {
+                selectAlumno.addEventListener('change', function () {
+                    if (this.value && this.value.trim() !== '') {
+                        this.classList.remove('is-invalid');
+                        this.setCustomValidity('');
+                        this.setAttribute('aria-invalid', 'false');
+                    } else {
+                        this.setCustomValidity('Seleccione un alumno válido.');
+                        this.setAttribute('aria-invalid', 'true');
+                    }
+                });
+            }
+
+            // Clear custom validity for calificacion on input/change
+            if (calificacion) {
+                const clearCalificacionValidity = function () {
+                    const v = calificacion.value;
+                    if (v != null && v.toString().trim() !== '') {
+                        const n = parseFloat(v);
+                        if (!isNaN(n) && n >= 0 && n <= 10) {
+                            calificacion.classList.remove('is-invalid');
+                            if (calificacionFeedback) calificacionFeedback.classList.remove('d-block');
+                            calificacion.setCustomValidity('');
+                            calificacion.setAttribute('aria-invalid', 'false');
+                            return;
+                        }
+                    }
+                    // keep invalid until user types a valid number
+                    calificacion.classList.add('is-invalid');
+                    if (calificacionFeedback) calificacionFeedback.classList.add('d-block');
+                     calificacion.setCustomValidity('Ingrese una calificación válida (0 a 10).');
+                     calificacion.setAttribute('aria-invalid', 'true');
+                };
+                calificacion.addEventListener('input', clearCalificacionValidity);
+                calificacion.addEventListener('change', clearCalificacionValidity);
+            }
+
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', function (event) {
+                    // Prevent the browser from submitting the form automatically;
+                    // we'll submit programmatically when the form is valid.
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // Custom select validation: ensure a non-empty value is selected
+                    // Validate alumno select first (important field)
+                    if (selectAlumno) {
+                        if (!selectAlumno.value || selectAlumno.value.trim() === '') {
+                            selectAlumno.classList.add('is-invalid');
+                            selectAlumno.setCustomValidity('Seleccione un alumno válido.');
+                            showFeedbackFor(selectAlumno);
+                            selectAlumno.setAttribute('aria-invalid', 'true');
+                        } else {
+                            selectAlumno.classList.remove('is-invalid');
+                            selectAlumno.setCustomValidity('');
+                            selectAlumno.setAttribute('aria-invalid', 'false');
+                        }
+                    }
+
+                    if (selectCinturon) {
+                        if (!selectCinturon.value || selectCinturon.value.trim() === '') {
+                            selectCinturon.classList.add('is-invalid');
+                            selectCinturon.setCustomValidity('Seleccione un cinturón válido.');
+                            showFeedbackFor(selectCinturon);
+                            selectCinturon.setAttribute('aria-invalid', 'true');
+                        } else {
+                            selectCinturon.classList.remove('is-invalid');
+                            selectCinturon.setCustomValidity('');
+                            selectCinturon.setAttribute('aria-invalid', 'false');
+                        }
+                    }
+
+                    // Validate calificacion: required and numeric between 0 and 10
+                    if (calificacion) {
+                        const v = calificacion.value;
+                        let invalidCal = false;
+                        if (!v || v.toString().trim() === '') {
+                            invalidCal = true;
+                        } else {
+                            const n = parseFloat(v);
+                            if (isNaN(n) || n < 0 || n > 10) invalidCal = true;
+                        }
+
+                        if (invalidCal) {
+                            calificacion.classList.add('is-invalid');
+                            showFeedbackFor(calificacion);
+                            calificacion.setCustomValidity('Ingrese una calificación válida (0 a 10).');
+                            calificacion.setAttribute('aria-invalid', 'true');
+                        } else {
+                            calificacion.classList.remove('is-invalid');
+                            // remove only this field's feedback
+                            const fb = calificacion.nextElementSibling && calificacion.nextElementSibling.classList.contains('invalid-feedback') ? calificacion.nextElementSibling : calificacion.closest('.col-md-6, .col-md-12')?.querySelector('.invalid-feedback');
+                            if (fb) fb.classList.remove('d-block');
+                            calificacion.setCustomValidity('');
+                            calificacion.setAttribute('aria-invalid', 'false');
+                        }
+                    }
+
+                    // Trigger validation UI
                     form.classList.add('was-validated');
+
+                    // If invalid, focus first invalid control (select first)
+                    if (!form.checkValidity()) {
+                        // focus order: calificacion -> alumno -> cinturon -> first invalid
+                        if (calificacion && (calificacion.classList.contains('is-invalid'))) {
+                            calificacion.focus();
+                        } else if (selectAlumno && (!selectAlumno.value || selectAlumno.value.trim() === '')) {
+                            selectAlumno.focus();
+                        } else if (selectCinturon && (!selectCinturon.value || selectCinturon.value.trim() === '')) {
+                            selectCinturon.focus();
+                        } else {
+                            // fallback: focus first element that is invalid (has .is-invalid or :invalid)
+                            const firstInvalid = form.querySelector('.is-invalid, :invalid');
+                            if (firstInvalid) firstInvalid.focus();
+                        }
+                        return; // do not submit
+                    }
+
+                    // If valid, submit form programmatically (avoids double submit when JS prevents default)
+                    form.submit();
+
                 }, false);
             });
         })();
     </script>
 	<!--end::JavaScript-->
+		</div>
+		
+	</div>
+
+
 </body>
 </html>

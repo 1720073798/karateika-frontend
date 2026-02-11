@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class AscensoDTOResponse {
 
-    private int asc_id_serial;
+    private Integer asc_id_serial;
     private String asc_cinturon;
     private LocalDate asc_fecha_examen;
     private LocalDate asc_fecha_ascenso;

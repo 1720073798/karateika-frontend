@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -68,4 +69,12 @@ public class AscensoControllador {
         servicioAscenso.crearAscenso(ascenso);
         return "redirect:/ascensos/listarascensos";
     }
+    
+	@GetMapping("buscar/{idAscenso}")
+	public String editarAscenso(@PathVariable int idAscenso , Model model) {
+		model.addAttribute("alumnoModel", alumnoService.listarAlumno());
+		model.addAttribute("cinturones", Arrays.asList(Cinturon.values())); //lista de cinturones
+		model.addAttribute("ascenso", servicioAscenso.buscarPorId(idAscenso)); //buscar por id //enviar el objeto encontrado		
+		return "ascenso/nuevoascensos";  //abrir formulario nuevo curso
+	}
 }
