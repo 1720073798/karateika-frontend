@@ -81,9 +81,9 @@
 						<!-- EVALUADOR -->
 						<div class="col-md-6">
 							<label for="ascEvaluador" class="form-label">Evaluador *</label>
-							<input type="text" class="form-control" id="ascEvaluador"
-								placeholder="Ej: Sensei Carlos" maxlength="100"
-								th:field="*{asc_evaluador}" required />
+							<!-- Valor fijo y solo lectura; se mantiene el name para que se envíe con el formulario -->
+							<input type="text" class="form-control" id="ascEvaluador" name="asc_evaluador"
+								value="SENSEI ROMEL ARMIJOS" maxlength="100" readonly />
 							<div class="invalid-feedback">Ingrese el nombre del
 								evaluador.</div>
 						</div>
