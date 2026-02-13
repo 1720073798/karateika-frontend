@@ -11,10 +11,49 @@
 
 		<div class="card">
 			<div class="card-body">
-				<a th:href="@{/ascensos/nuevoascenso}" class="btn btn-success mb-3">Nuevo
-					Ascenso</a>
+				<div class="d-flex mb-3 align-items-center">
+					<a th:href="@{/ascensos/nuevoascenso}" class="btn btn-success me-2">Nuevo
+						Ascenso</a>
+					<!-- Caja de búsqueda por cédula y por fecha -->
+					<div class="d-flex"
+						style="gap: 6px; align-items: center; flex-wrap: nowrap; overflow-x: auto;">
+						<div class="input-group" style="max-width: 260px; flex: none;">
+							<span class="input-group-text"><i
+								class="fa-solid fa-magnifying-glass"></i></span>
+							<!-- Reduce cedula width para evitar overflow -->
+							<input type="text" id="searchCedula" class="form-control"
+								placeholder="Buscar por cédula..." onkeyup="buscarFiltros()"
+								style="min-width: 140px; width: 140px;" />
+							<button class="btn btn-outline-secondary btn-sm" type="button"
+								onclick="limpiarBusquedaCedula()" title="Limpiar búsqueda"
+								style="padding: .2rem .4rem;">
+								<i class="fa-solid fa-xmark" aria-hidden="true"></i> <span
+									class="visually-hidden">Limpiar</span>
+							</button>
+						</div>
+					</div>
+					<div class="d-flex" style="gap: 6px; align-items: center; flex-wrap: nowrap; overflow-x: auto;">
+						<!-- Fecha de ascenso -->
+						<div class="input-group" style="max-width: 260px; flex: none;">
+							<span class="input-group-text"><i
+								class="fa-solid fa-calendar-days"></i></span> <input type="date"
+								id="searchFechaAscenso" class="form-control"
+								style="min-width: 160px; width: 160px;"
+								onchange="buscarFiltros()" />
+							<button class="btn btn-outline-secondary btn-sm" type="button"
+								onclick="limpiarBusquedaFecha()" title="Limpiar fecha"
+								style="padding: .2rem .4rem;">
+								<i class="fa-solid fa-xmark" aria-hidden="true"></i> <span
+									class="visually-hidden">Limpiar fecha</span>
+							</button>
+						</div>
 
-				<table class="table table-striped table-hover">
+					</div>
+
+
+				</div>
+
+				<table class="table table-striped table-hover" id="tablaAscensos">
 					<thead class="table-dark">
 						<tr>
 							<th scope="col">ID Ascenso</th>
@@ -31,12 +70,16 @@
 					</thead>
 
 					<tbody>
-						<tr th:each="ascenso : ${listaascensos}">
+						<tr th:each="ascenso : ${listaascensos}"
+							th:attr="data-cedula=${ascenso.fkalumno.alu_cedula}">
 							<td th:text="${ascenso.asc_id_serial}"></td>
-							<td th:text="${ascenso.fkalumno.alu_nombre}+' '+${ascenso.fkalumno.alu_apellido}"></td>
+							<td
+								th:text="${ascenso.fkalumno.alu_nombre}+' '+${ascenso.fkalumno.alu_apellido}"></td>
 							<td th:text="${ascenso.asc_cinturon}"></td>
-							<td th:text="${#temporals.format(ascenso.asc_fecha_examen, 'yyyy-MM-dd')}"></td>
-							<td th:text="${#temporals.format(ascenso.asc_fecha_ascenso, 'yyyy-MM-dd')}"></td>
+							<td
+								th:text="${#temporals.format(ascenso.asc_fecha_examen, 'yyyy-MM-dd')}"></td>
+							<td
+								th:text="${#temporals.format(ascenso.asc_fecha_ascenso, 'yyyy-MM-dd')}"></td>
 							<td th:text="${ascenso.asc_calificacion}"></td>
 							<td th:text="${ascenso.asc_evaluador}"></td>
 							<td th:text="${ascenso.asc_observacion}"></td>
@@ -46,15 +89,82 @@
 
 							<td>
 								<!-- use absolute paths so Thymeleaf doesn't generate a relative doubled path -->
-								<a th:href="@{/ascensos/buscar/{idAscenso}(idAscenso=${ascenso.asc_id_serial})}" class="btn btn-sm btn-primary" title="Editar"> <i class="fa-solid fa-pen-to-square"></i></a>
-								
+								<a
+								th:href="@{/ascensos/buscar/{idAscenso}(idAscenso=${ascenso.asc_id_serial})}"
+								class="btn btn-sm btn-primary" title="Editar"> <i
+									class="fa-solid fa-pen-to-square"></i></a>
+
 							</td>
 						</tr>
 					</tbody>
 				</table>
 
 			</div>
+			<script>
+	function buscarFiltros() {
+	    const term = (document.getElementById('searchCedula').value || '').trim();
+	    const digits = term.replace(/\D/g, '');
+	    const fechaSearch = (document.getElementById('searchFechaAscenso').value || '').trim(); // yyyy-mm-dd or ''
+	    const rows = document.querySelectorAll('#tablaAscensos tbody tr');
+	
+	    // If no filters, show all
+	    if (!digits && !fechaSearch) {
+	        rows.forEach(r => r.style.display = '');
+	        return;
+	    }
+	
+	    rows.forEach(r => {
+	        const ced = (r.getAttribute('data-cedula') || '').replace(/\D/g, '');
+	        const fechaAscenso = (r.cells[4] && r.cells[4].textContent) ? r.cells[4].textContent.trim() : '';
+	
+	        const matchCedula = !digits || (ced && ced.includes(digits));
+	        const matchFecha = !fechaSearch || (fechaAscenso && fechaAscenso === fechaSearch);
+	
+	        if (matchCedula && matchFecha) {
+	            r.style.display = '';
+	        } else {
+	            r.style.display = 'none';
+	        }
+	    });
+	}
+	function limpiarBusquedaCedula(){
+	    document.getElementById('searchCedula').value = '';
+	    buscarFiltros();
+	}
+	function limpiarBusquedaFecha(){
+	    document.getElementById('searchFechaAscenso').value = '';
+	    buscarFiltros();
+	}
+		// Cuando el usuario presiona Enter en el campo de fecha, mover el foco al siguiente control enfocables
+		document.addEventListener('DOMContentLoaded', function () {
+		    function focusNextElement(current) {
+		        const selectors = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+		        const all = Array.from(document.querySelectorAll(selectors)).filter(el => el.offsetParent !== null);
+		        const idx = all.indexOf(current);
+		        for (let i = idx + 1; i < all.length; i++) {
+		            try {
+		                all[i].focus();
+		                return;
+		            } catch (e) {
+		                // skip if cannot focus
+		            }
+		        }
+		    }
+
+		    const fechaInput = document.getElementById('searchFechaAscenso');
+		    if (fechaInput) {
+		        fechaInput.addEventListener('keydown', function (e) {
+		            if (e.key === 'Enter') {
+		                e.preventDefault();
+		                focusNextElement(this);
+		            }
+		        });
+		    }
+		});
+				</script>
 		</div>
 	</div>
+
+
 </body>
 </html>

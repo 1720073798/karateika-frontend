@@ -3,6 +3,8 @@ package com.uisrael.karateika_frontend.modelo.dto.request;
 import java.time.LocalDate;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -15,7 +17,9 @@ public class AlumnoDTORequest {
 	private String alu_direccion;
 	private String alu_telefono;
 	private String alu_email;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate alu_fecha_nacimiento;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate alu_fecha_ingreso;
 	private String alu_cinturon_ingreso;
 	private String alu_cinturon_actual;

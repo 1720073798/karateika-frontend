@@ -33,33 +33,42 @@
                     <div class="col-md-6">
                         <label for="comNumero" class="form-label">Número de Comprobante <span class="text-danger">*</span></label>
                         <input type="number" class="form-control" id="comNumero"
-                               th:field="*{com_numero}" min="1" required />
-                        <div id="numeroFeedback" class="invalid-feedback" style="display: none;">
+                               th:field="*{com_numero}" min="1" required
+                               th:classappend="${com_numero_error} ? ' is-invalid' : ''" />
+                        <div id="numeroFeedback" class="invalid-feedback" style="display: none;" th:if="${#strings.isEmpty(com_numero_error)}">
                             Por favor ingrese un número válido (mayor a 0)
                         </div>
+                        <!-- Backend-side error -->
+                        <div th:if="${com_numero_error}" class="invalid-feedback" th:text="${com_numero_error}" style="display:block;"></div>
                     </div>
 
                     <!-- Fecha de Subida -->
                     <div class="col-md-6">
                         <label for="comFechaSubida" class="form-label">Fecha de Subida <span class="text-danger">*</span></label>
                         <input type="date" class="form-control" id="comFechaSubida"
-                               th:field="*{com_fecha_subida}" required />
-                        <div id="fechaFeedback" class="invalid-feedback" style="display: none;">
+                               th:field="*{com_fecha_subida}" required
+                               th:classappend="${com_fecha_error} ? ' is-invalid' : ''" />
+                        <div id="fechaFeedback" class="invalid-feedback" style="display: none;" th:if="${#strings.isEmpty(com_fecha_error)}">
                             Por favor seleccione una fecha válida
                         </div>
+                        <!-- Backend-side date error -->
+                        <div th:if="${com_fecha_error}" class="invalid-feedback" th:text="${com_fecha_error}" style="display:block;"></div>
                     </div>
 
                     <!-- Archivo Adjunto -->
                     <div class="col-12">
                         <label for="archivo" class="form-label">Archivo Adjunto (PDF o Imagen)</label>
                         <input type="file" class="form-control" id="archivo"
-                               name="archivo" accept=".pdf,.jpg,.jpeg,.png,.gif" />
+                               name="archivo" accept=".pdf,.jpg,.jpeg,.png,.gif"
+                               th:classappend="${com_archivo_error} ? ' is-invalid' : ''" />
                         <div class="form-text">
                             <i class="bi bi-info-circle"></i> Formatos permitidos: PDF, JPG, PNG. Tamaño máximo: 5MB
                         </div>
                         <div id="archivoFeedback" class="invalid-feedback" style="display: none;">
                             El archivo no es válido o excede el tamaño permitido
                         </div>
+                        <!-- Backend-side file error -->
+                        <div th:if="${com_archivo_error}" class="invalid-feedback" th:text="${com_archivo_error}" style="display:block;"></div>
                     </div>
                 </div>
                 <!--end::Row-->
@@ -197,7 +206,15 @@
         }
 
         // Validar archivo (si existe)
-        if (archivoInput && archivoInput.files[0]) {
+        if (!archivoInput || !archivoInput.files || !archivoInput.files[0]) {
+            // If server-side already attached an error, keep it; otherwise show client message
+            if (archivoFeedback) {
+                archivoFeedback.textContent = 'Debe subir archivo de respaldo';
+                archivoFeedback.style.display = 'block';
+            }
+            if (archivoInput) archivoInput.classList.add('is-invalid');
+            isValid = false;
+        } else {
             const file = archivoInput.files[0];
             const tiposValidos = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
             const tamanoMax = 5 * 1024 * 1024;

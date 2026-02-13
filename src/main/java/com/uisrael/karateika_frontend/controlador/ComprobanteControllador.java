@@ -45,14 +45,22 @@ public class ComprobanteControllador {
 	    
 	    // Validación manual del número
 	    if (comprobante.getCom_numero() == null || comprobante.getCom_numero() <= 0) {
-	        model.addAttribute("error", "El número de comprobante es obligatorio y debe ser mayor a 0");
+	        model.addAttribute("com_numero_error", "El número de comprobante es obligatorio y debe ser mayor a 0");
 	        model.addAttribute("comprobante", comprobante);
 	        return "/comprobante/nuevocomprobantes";
 	    }
 	    
 	    // Validación manual de la fecha
 	    if (comprobante.getCom_fecha_subida() == null) {
-	        model.addAttribute("error", "La fecha de subida es obligatoria");
+	        // Put the message into the field-specific attribute so it appears under the date input
+	        model.addAttribute("com_fecha_error", "La fecha de subida es obligatoria");
+	        model.addAttribute("comprobante", comprobante);
+	        return "/comprobante/nuevocomprobantes";
+	    }
+
+	    // Validación manual del archivo adjunto: obligatorio
+	    if (archivo == null || archivo.isEmpty()) {
+	        model.addAttribute("com_archivo_error", "Debe subir archivo de respaldo");
 	        model.addAttribute("comprobante", comprobante);
 	        return "/comprobante/nuevocomprobantes";
 	    }
@@ -60,8 +68,25 @@ public class ComprobanteControllador {
 	    try {
 	        servicioComprobante.guardarComprobante(comprobante, archivo);
 	        return "redirect:/comprobantes/listarcomprobante";
-	    } catch (Exception e) {
-	        model.addAttribute("error", "Error al guardar: " + e.getMessage());
+	    } catch (RuntimeException e) {
+	        // Extract backend message that may contain the specific field error
+	        String msg = e.getMessage();
+	        if (msg == null) msg = "Error al guardar";
+
+	        String lower = msg.toLowerCase();
+	        // If backend says the number already exists, attach it to the number-specific model attribute
+	        if (lower.contains("número de comprobante") || lower.contains("numero de comprobante")) {
+	            model.addAttribute("com_numero_error", msg);
+	        } else if (lower.contains("fecha de subida") || (lower.contains("fecha") && lower.contains("subida"))) {
+	            // If backend reports an issue related to the date, attach it to the date-specific attribute
+	            model.addAttribute("com_fecha_error", msg);
+	        } else if (lower.contains("archivo") || lower.contains("respaldo") || lower.contains("pdf") || lower.contains("imagen")) {
+	            // If backend reports an issue related to the uploaded file
+	            model.addAttribute("com_archivo_error", msg);
+	        } else {
+	            model.addAttribute("error", "Error al guardar: " + msg);
+	        }
+
 	        model.addAttribute("comprobante", comprobante);
 	        return "/comprobante/nuevocomprobantes";
 	    }

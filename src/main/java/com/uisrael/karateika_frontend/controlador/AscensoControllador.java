@@ -67,7 +67,8 @@ public class AscensoControllador {
 
         // Si no se pidió certificado, sólo guardamos y redirigimos
         servicioAscenso.crearAscenso(ascenso);
-        return "redirect:/ascensos/listarascensos";
+        // Redirigimos a la lista de alumnos para que se visualice el cinturón actualizado
+        return "redirect:/alumnos";
     }
     
 	@GetMapping("buscar/{idAscenso}")

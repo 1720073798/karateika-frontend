@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -52,6 +52,34 @@
     <link rel="stylesheet" th:href="@{/css/adminlte.css}" />
     <!--end::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Ajustes para que el recuadro alcance casi los bordes del sidebar y sea más oscuro */
+        .sidebar-brand {
+            /* reducir espacio exterior para que el bloque ocupe más área */
+            padding: 4px 8px;
+        }
+
+        .sidebar-brand .brand-link {
+            display: block;                       /* bloque para controlar ancho con margenes */
+            width: calc(100% + 16px);             /* un poco más ancho que el contenedor */
+            margin-left: -8px;                    /* extender hacia la izquierda */
+            margin-right: -8px;                   /* extender hacia la derecha */
+            align-items: center;
+            gap: 12px;                             /* separación entre imagen y texto */
+            background-color: #6c757d;            /* gris oscuro (Bootstrap 'secondary') */
+            padding: 10px 14px;                   /* espacio interno */
+            border-radius: 6px;                   /* bordes redondeados */
+            text-decoration: none;
+            color: #ffffff;                       /* texto en blanco para contraste */
+            box-sizing: border-box;
+        }
+
+        .sidebar-brand .brand-link img {
+            display: block;
+            max-height: 48px; /* controlar altura del logo */
+            width: auto;
+        }
+    </style>
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -64,11 +92,11 @@
             <div class="container-fluid">
                 <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link"
-                        data-lte-toggle="sidebar" href="#" role="button"> <i
-                            class="bi bi-list"></i>
-                    </a></li>
-            
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list"></i>
+                        </a>
+                    </li>
                 </ul>
                 <!--end::Start Navbar Links-->
 
@@ -241,8 +269,13 @@
             <div class="sidebar-brand">
                 <!--begin::Brand Link-->
                 <a th:href="@{/}" class="brand-link"> <!--begin::Brand Image-->
-                    <img th:src="@{/assets/img/logo.jpeg}" alt="AdminLTE Logo"
-                    class="brand-image opacity-75 shadow" /> <!--end::Brand Image--> <!--begin::Brand Text-->
+                    <!-- Use both th:src (resolved by Thymeleaf) and a plain src as a fallback
+                         The onerror handler will replace the image with a known default if loading fails -->
+                    <img th:src="@{/assets/img/login.png}" src="/assets/img/login.png"
+                         alt="Logo KARATE IKA"
+                         class="brand-image opacity-75 shadow"
+                         onerror="this.onerror=null;this.src='/assets/img/default-150x150.png';" />
+                    <!--end::Brand Image--> <!--begin::Brand Text-->
                     <span class="brand-text fw-light">KARATE IKA</span> <!--end::Brand Text-->
                 </a>
                 <!--end::Brand Link-->

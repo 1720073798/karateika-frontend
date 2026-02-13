@@ -23,7 +23,7 @@
 						<div class="input-group">
 							<span class="input-group-text"><i class="bi bi-search"></i></span>
 							<input type="text" id="searchInput" class="form-control"
-								placeholder="Buscar por alumno..."
+								placeholder="Buscar por alumno o cédula..."
 								onkeyup="buscarPagos()">
 						</div>
 					</div>
@@ -61,49 +61,33 @@
 							</tr>
 						</thead>
 
-						<tbody id="pagoTableBody">
-							<tr th:each="pago : ${listapagos}">
+						<tbody id="pagoTableBody">	
+							<tr th:each="pago : ${listapagos}" th:attr="data-cedula=${pago.fkalumno?.alu_cedula}">
 								<td th:text="${pago.pag_id}"></td>
-
-								<td th:text="${pago.fkalumno?.alu_nombre} + ' ' + ${pago.fkalumno?.alu_apellido} ?: '—'"></td>
-
-								<td th:text="${pago.fkcomprobante?.com_numero} ?: '—'"></td>
-
-								<td><span class="badge bg-success">
+								<td th:text="${pago.fkalumno?.alu_nombre} + ' ' + ${pago.fkalumno?.alu_apellido} ?: '—'"></td>
+								<td th:text="${pago.fkcomprobante?.com_numero} ?: '—'"></td>
+								<td><span class="badge bg-success">
 										$<span th:text="${#numbers.formatDecimal(pago.pag_monto, 1, 2)}"></span>
 								</span></td>
-
-								<td th:text="${pago.pag_metodo_pago}"></td>
-
-								<td th:text="${#temporals.format(pago.pag_fecha_pago, 'dd/MM/yyyy')}"></td>
+								<td th:text="${pago.pag_metodo_pago}"></td>
+								<td th:text="${#temporals.format(pago.pag_fecha_pago, 'dd/MM/yyyy')}"></td>
 								
 								<td th:text="${pago.pag_registrado_por}"></td>
 								
 								<td th:text="${#temporals.format(pago.pag_fecha_registro, 'dd/MM/yyyy')}"></td>
-
-								<td class="text-center"><a
+								<td class="text-center"><a
 									th:href="@{/pagos/editar/{id}(id=${pago.pag_id})}"
 									class="btn btn-sm btn-warning" title="Editar"> <i class="bi bi-pencil-square"></i>
 								</a> <a
 									th:href="@{/pagos/eliminar/{id}(id=${pago.pag_id})}"
 									class="btn btn-sm btn-danger" title="Eliminar"
 									onclick="return confirm(
-                                       '¿Estás seguro que quieres eliminar este pago?'
-                                   );">
-										<i class="bi bi-trash"></i>
-								</a></td>
-							</tr>
-						</tbody>
-
-					</table>
+	                                       '¿Estás seguro que quieres eliminar este pago?'	                                   );">										<i class="bi bi-trash"></i>
+								</a></td>							</tr>						</tbody>
+					</table>
 				</div>
-
-			</div>
-		</div>
-
-	</div>
-
-	<!-- Scripts -->
+			</div>
+				<!-- Scripts -->
 	<script>
     let currentPage = 1;
     const itemsPerPage = 10;
@@ -122,20 +106,37 @@
         const searchTerm = document
             .getElementById('searchInput')
             .value
+            .trim()
             .toLowerCase();
         const fechaSearch = document.getElementById('searchDate').value;
 
+        const searchDigits = searchTerm.replace(/\D/g, ''); // sólo dígitos para cédula
+
         filteredData = allData.filter(row => {
             const alumno = row.cells[1].textContent.toLowerCase();
-            const fechaPago = row.cells[5].textContent;
-            const fechaRegistro = row.cells[7].textContent;
-            
-            const matchAlumno = alumno.includes(searchTerm);
-            const matchFecha = !fechaSearch || 
-                              fechaPago.includes(fechaSearch.split('-').reverse().join('/')) ||
-                              fechaRegistro.includes(fechaSearch.split('-').reverse().join('/'));
-            
-            return matchAlumno && matchFecha;
+            const fechaPagoText = row.cells[5].textContent.trim();
+            const cedula = (row.getAttribute('data-cedula') || '').toLowerCase();
+            const cedulaDigits = cedula.replace(/\D/g, '');
+
+            // Normalizar fechaPago (dd/MM/yyyy -> yyyy-mm-dd) para comparar con input type=date
+            let fechaPagoNormalized = '';
+            if (fechaPagoText) {
+                const parts = fechaPagoText.split('/');
+                if (parts.length === 3) {
+                    const dd = parts[0].padStart(2, '0');
+                    const mm = parts[1].padStart(2, '0');
+                    const yyyy = parts[2];
+                    fechaPagoNormalized = `${yyyy}-${mm}-${dd}`;
+                }
+            }
+
+            const matchAlumno = !searchTerm || alumno.includes(searchTerm);
+            const matchCedula = searchDigits ? cedulaDigits.includes(searchDigits) : true;
+
+            // Filtrar por fecha de pago exactamente (si se seleccionó una fecha)
+            const matchFecha = !fechaSearch || (fechaPagoNormalized && fechaPagoNormalized === fechaSearch);
+
+            return (matchAlumno || matchCedula) && matchFecha;
         });
 
         currentPage = 1;
@@ -162,6 +163,7 @@
             .forEach(row => row.style.display = '');
     }
 </script>
-
-</body>
-</html>
+		</div>
+	</div>
+
+</body></html>

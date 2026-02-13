@@ -22,8 +22,7 @@
 					<div class="col-md-6">
 						<div class="input-group">
 							<input type="text" id="searchInput" class="form-control"
-								placeholder="Buscar por número..."
-								onkeyup="buscarComprobantes()">
+								placeholder="Buscar por número...">
 							<button class="btn btn-outline-secondary" type="button"
 								onclick="limpiarBusqueda()">
 								<i class="bi bi-x"></i>
@@ -60,12 +59,12 @@
 
 								<td><span
 									th:if="${comprobante.com_ruta_archivo != null 
-                                              && !comprobante.com_ruta_archivo.isEmpty()}"
+				                                              && !comprobante.com_ruta_archivo.isEmpty()}"
 									class="badge bg-success"> <i class="bi bi-file-earmark"></i>
 										Archivo
 								</span> <span
 									th:if="${comprobante.com_ruta_archivo == null 
-                                              || comprobante.com_ruta_archivo.isEmpty()}"
+				                                              || comprobante.com_ruta_archivo.isEmpty()}"
 									class="badge bg-secondary"> <i class="bi bi-info-circle"></i>
 										Sin archivo
 								</span></td>
@@ -76,16 +75,7 @@
 								<td class="text-center"><a
 									th:href="@{/comprobantes/editar/{id}(id=${comprobante.com_id})}"
 									class="btn btn-sm btn-warning" title="Editar"> <i class="bi bi-pencil-square"></i>
-								</a> <a
-									th:href="@{/comprobantes/eliminar/{id}(id=${comprobante.com_id})}"
-									class="btn btn-sm btn-danger" title="Eliminar"
-									onclick="return confirm(
-                                       '¿Estás seguro que quieres eliminar el comprobante N° ${comprobante.com_numero}?'
-                                   );">
-										<i class="bi bi-trash"></i>
-
-
-								</a></td>
+								</a> </td>
 							</tr>
 						</tbody>
 
@@ -93,11 +83,7 @@
 				</div>
 
 			</div>
-		</div>
-
-	</div>
-
-	<!-- Scripts -->
+				<!-- Scripts -->
 	<script>
     let currentPage = 1;
     const itemsPerPage = 10;
@@ -110,24 +96,43 @@
         );
         filteredData = [...allData];
         mostrarPagina(currentPage);
+
+        // Attach live search handler (debounced)
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            let debounceTimer = null;
+            searchInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(buscarComprobantes, 150);
+            });
+        }
     });
 
     function buscarComprobantes() {
-        const searchTerm = document
+        const searchTermRaw = document
             .getElementById('searchInput')
-            .value
-            .toLowerCase();
+            .value || '';
+        const searchTerm = searchTermRaw.trim().toLowerCase();
 
-        filteredData = allData.filter(row =>
-            row.cells[1].textContent.includes(searchTerm)
-        );
+        if (searchTerm === '') {
+            filteredData = [...allData];
+        } else {
+            filteredData = allData.filter(row => {
+                const numeroText = (row.cells[1].textContent || '').trim().toLowerCase();
+                return numeroText.includes(searchTerm);
+            });
+        }
 
         currentPage = 1;
         mostrarPagina(currentPage);
     }
 
     function limpiarBusqueda() {
-        document.getElementById('searchInput').value = '';
+        const input = document.getElementById('searchInput');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
         buscarComprobantes();
     }
 
@@ -141,6 +146,11 @@
             .forEach(row => row.style.display = '');
     }
 </script>
+		</div>
+
+	</div>
+
+
 
 </body>
 </html>

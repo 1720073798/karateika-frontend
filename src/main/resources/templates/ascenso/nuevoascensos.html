@@ -28,9 +28,10 @@
 						<div class="col-md-6">
 							<label for="cbalumno" class="form-label">Alumno </label> <select
 								id="cbalumno" class="form-select" th:field="*{fkalumno.alu_id}" required>
-								<option value="0">--Seleccione Alumno--</option>
+								<option value="0" data-cinturon="">--Seleccione Alumno--</option>
 								<option th:each="alumnos : ${alumnoModel}"
 									th:value="${alumnos.alu_id}"
+									th:attr="data-cinturon=${alumnos.alu_cinturon_actual}"
 									th:text="${alumnos.alu_nombre}+' '+${alumnos.alu_apellido}"></option>
 							</select>
 							<div id="cbalumnoFeedback" class="invalid-feedback">Seleccione un alumno</div>
@@ -40,31 +41,37 @@
 						<div class="col-md-6">
 							<label for="cbcinturon" class="form-label">Nuevo
 								Cinturon:*</label> <select class="form-select" id="cbcinturon"
-								th:field="*{asc_cinturon}" required>
+								th:field="*{asc_cinturon}" th:attr="data-current=${ascenso.asc_cinturon}" required>
 
 								<!-- placeholder: keep value empty but allow it to be focusable so validation works reliably -->
 								<option value="0">Seleccione...</option>
 								<!-- Renderizamos las opciones desde el enum pasado en el modelo -->
 								<th:block th:each="cinturon : ${cinturones}">
 									<option th:value="${cinturon.name()}" th:text="${cinturon.nombre}"></option>
-								</th:block>
-							</select>
-							<div id="cbcinturonFeedback" class="invalid-feedback">Campo requerido</div>
-						</div>
+                                 </th:block>
+                             </select>
+                             <div id="cbcinturonFeedback" class="invalid-feedback">Campo requerido</div>
+                         </div>
 
 						<!-- FECHA EXAMEN -->
 						<div class="col-md-6">
 							<label for="ascFechaExamen" class="form-label">Fecha de
-								Examen *</label> <input type="date" class="form-control"
-								id="ascFechaExamen" th:field="*{asc_fecha_examen}" required />
+								Examen *</label>
+							<input type="date" class="form-control"
+								id="ascFechaExamen" name="asc_fecha_examen"
+								th:value="${ascenso.asc_fecha_examen != null ? #temporals.format(ascenso.asc_fecha_examen,'yyyy-MM-dd') : ''}"
+								required />
 							<div class="invalid-feedback">Seleccione una fecha válida.</div>
 						</div>
 
 						<!-- FECHA ASCENSO -->
 						<div class="col-md-6">
 							<label for="ascFechaAscenso" class="form-label">Fecha de
-								Ascenso *</label> <input type="date" class="form-control"
-								id="ascFechaAscenso" th:field="*{asc_fecha_ascenso}" required />
+								Ascenso *</label>
+							<input type="date" class="form-control"
+								id="ascFechaAscenso" name="asc_fecha_ascenso"
+								th:value="${ascenso.asc_fecha_ascenso != null ? #temporals.format(ascenso.asc_fecha_ascenso,'yyyy-MM-dd') : ''}"
+								required />
 							<div class="invalid-feedback">Seleccione una fecha válida.</div>
 						</div>
 
@@ -314,10 +321,77 @@
         })();
     </script>
 	<!--end::JavaScript-->
-		</div>
-		
-	</div>
+	<!-- Script adicional: al seleccionar un alumno, deshabilitar cinturones inferiores -->
+	<script>	    document.addEventListener('DOMContentLoaded', function () {	        const selectAlumno = document.getElementById('cbalumno');	        const selectCinturon = document.getElementById('cbcinturon');	        if (!selectAlumno || !selectCinturon) return;		        // Obtener el orden de cinturones desde el select (excluyendo el placeholder)	        const cinturonOrder = Array.from(selectCinturon.options)	            .filter(opt => opt.value && opt.value !== '0')	            .map(opt => opt.value);		        function updateCinturonOptions() {	            const selectedOpt = selectAlumno.options[selectAlumno.selectedIndex];	            // cinturón actual del alumno (desde el option data-cinturon)
+                const alumnoCurrentCint = selectedOpt ? selectedOpt.getAttribute('data-cinturon') : '';
+                // valor que actualmente tiene el select de formulario (si estamos editando, esto fue establecido por Thymeleaf)
+                const formCurrentCint = selectCinturon.getAttribute('data-current') || selectCinturon.value || '';
 
+                // si no hay cinturon actual conocido, habilitar todo
+                if (!alumnoCurrentCint) {
+                    Array.from(selectCinturon.options).forEach(opt => {
+                        opt.disabled = false;
+                        opt.classList.remove('text-muted');
+                    });
+                    // si hay un valor guardado en el formulario, selecciónalo
+                    if (formCurrentCint) {
+                        try { selectCinturon.value = formCurrentCint; } catch (e) {}
+                    }
+                    return;
+                }
 
-</body>
-</html>
+                const currentIndex = cinturonOrder.indexOf(alumnoCurrentCint);
+                // si no se encuentra en la lista, habilitar todo
+                if (currentIndex === -1) {
+                    Array.from(selectCinturon.options).forEach(opt => {
+                        opt.disabled = false;
+                        opt.classList.remove('text-muted');
+                    });
+                    if (formCurrentCint) { try { selectCinturon.value = formCurrentCint; } catch (e) {} }
+                    return;
+                }
+
+                // deshabilitar las opciones iguales o inferiores (índices menores o iguales)
+                Array.from(selectCinturon.options).forEach(opt => {
+                    if (!opt.value || opt.value === '0') {
+                        opt.disabled = false;
+                        opt.classList.remove('text-muted');
+                        return;
+                    }
+                    const optIndex = cinturonOrder.indexOf(opt.value);
+                    // If this option equals the currently saved form value (we are editing), keep it enabled
+                    if (formCurrentCint && opt.value === formCurrentCint) {
+                        opt.disabled = false;
+                        opt.classList.remove('text-muted');
+                        return;
+                    }
+                    if (optIndex <= currentIndex) {
+                        opt.disabled = true;
+                        opt.classList.add('text-muted');
+                    } else {
+                        opt.disabled = false;
+                        opt.classList.remove('text-muted');
+                    }
+                });
+
+                // Si la opción actualmente seleccionada en cbcinturon quedó deshabilitada, resetearla
+                const cSelIdx = selectCinturon.selectedIndex;
+                const cSelOpt = selectCinturon.options[cSelIdx];
+                if (cSelOpt && cSelOpt.disabled) {
+                    // sólo resetear si la opción no corresponde al valor guardado (formCurrentCint)
+                    if (!formCurrentCint || cSelOpt.value !== formCurrentCint) {
+                        selectCinturon.selectedIndex = 0;
+                    } else {
+                        // la opción guardada sigue siendo válida; forzarla como seleccionada
+                        try { selectCinturon.value = formCurrentCint; } catch (e) {}
+                    }
+                } else {
+                    // si no está deshabilitada y hay un valor guardado, seleccionarlo
+                    if (formCurrentCint) { try { selectCinturon.value = formCurrentCint; } catch (e) {} }
+                }
+             }
+		        // Actualizar al cargar y cuando cambie el alumno
+-	        updateCinturonOptions();
++	        updateCinturonOptions();
+             selectAlumno.addEventListener('change', updateCinturonOptions);	    });	</script>
+</div></body></html>

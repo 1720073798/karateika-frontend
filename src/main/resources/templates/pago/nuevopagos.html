@@ -21,6 +21,10 @@
                 <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
                 
                 <div class="row g-3">
+                		<input type="hidden" class="form-control" id="txtidPagos"
+								th:field="*{pag_id}"/>
+                
+               
                     <!-- Alumno -->
                     <div class="col-md-6">
                         <label for="alu_id" class="form-label">Alumno <span class="text-danger">*</span></label>

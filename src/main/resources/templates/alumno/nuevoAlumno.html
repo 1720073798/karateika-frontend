@@ -95,7 +95,8 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Fecha
 								de Nacimiento:*</label> <input type="date" class="form-control"
-								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}" required />
+								id="fechaNacimiento" th:field="*{alu_fecha_nacimiento}"
+								th:value="*{alu_fecha_nacimiento}" required />
 							<!-- Feedback para Fecha de nacimiento -->
 							<div id="fechaNacimientoFeedback" class="invalid-feedback">El alumno debe tener al menos 4 años.</div>
 
@@ -106,7 +107,8 @@
 						<div class="col-md-6">
 							<label for="validationCustom02" class="form-label">Fecha
 								de Ingreso:*</label> <input type="date" class="form-control"
-								id="fechaIngreso" th:field="*{alu_fecha_ingreso}" required />
+								id="fechaIngreso" th:field="*{alu_fecha_ingreso}"
+								th:value="*{alu_fecha_ingreso}" required />
 							<!-- Feedback para Fecha de ingreso -->
 							<div class="invalid-feedback">Seleccione una fecha de ingreso válida (no futura).</div>
 						</div>
